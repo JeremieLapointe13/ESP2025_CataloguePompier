@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("esp2025_backend")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+f30e0e844b3f5c744a250332388ebc30bf9db742")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+0ca0d798c45bd0cfdb460ec753128c082a0c7c9c")]
 [assembly: System.Reflection.AssemblyProductAttribute("esp2025_backend")]
 [assembly: System.Reflection.AssemblyTitleAttribute("esp2025_backend")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
