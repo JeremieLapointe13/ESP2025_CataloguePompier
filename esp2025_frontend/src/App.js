@@ -12,7 +12,7 @@ function App() {
 
   return (
     <div style={{ padding: "20px" }}>
-      <h1>Liste des utilisateurs</h1>
+      <h1>Liste des utilisateurs MOUAHAHAHAHAHA</h1>
       {users.map((user) => (
         <div key={user.idUser}>
           {user.firstName} {user.lastName}
