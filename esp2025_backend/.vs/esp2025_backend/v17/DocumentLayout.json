@@ -3,28 +3,8 @@
   "WorkspaceRootPath": "C:\\Users\\lapoi\\OneDrive\\Bureau\\ESP-2025\\ESP2025_CataloguePompier\\esp2025_backend\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{51965963-EA8E-4CE8-A284-0216F2D69A9C}|esp2025_backend.csproj|c:\\users\\lapoi\\onedrive\\bureau\\esp-2025\\esp2025_cataloguepompier\\esp2025_backend\\controllers\\userscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{51965963-EA8E-4CE8-A284-0216F2D69A9C}|esp2025_backend.csproj|solutionrelative:controllers\\userscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{51965963-EA8E-4CE8-A284-0216F2D69A9C}|esp2025_backend.csproj|c:\\users\\lapoi\\onedrive\\bureau\\esp-2025\\esp2025_cataloguepompier\\esp2025_backend\\properties\\launchsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
-      "RelativeMoniker": "D:0:0:{51965963-EA8E-4CE8-A284-0216F2D69A9C}|esp2025_backend.csproj|solutionrelative:properties\\launchsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{51965963-EA8E-4CE8-A284-0216F2D69A9C}|esp2025_backend.csproj|c:\\users\\lapoi\\onedrive\\bureau\\esp-2025\\esp2025_cataloguepompier\\esp2025_backend\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{51965963-EA8E-4CE8-A284-0216F2D69A9C}|esp2025_backend.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{51965963-EA8E-4CE8-A284-0216F2D69A9C}|esp2025_backend.csproj|c:\\users\\lapoi\\onedrive\\bureau\\esp-2025\\esp2025_cataloguepompier\\esp2025_backend\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
-      "RelativeMoniker": "D:0:0:{51965963-EA8E-4CE8-A284-0216F2D69A9C}|esp2025_backend.csproj|solutionrelative:appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{51965963-EA8E-4CE8-A284-0216F2D69A9C}|esp2025_backend.csproj|c:\\users\\lapoi\\onedrive\\bureau\\esp-2025\\esp2025_cataloguepompier\\esp2025_backend\\models\\user.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{51965963-EA8E-4CE8-A284-0216F2D69A9C}|esp2025_backend.csproj|solutionrelative:models\\user.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{51965963-EA8E-4CE8-A284-0216F2D69A9C}|esp2025_backend.csproj|c:\\users\\lapoi\\onedrive\\bureau\\esp-2025\\esp2025_cataloguepompier\\esp2025_backend\\models\\grade.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{51965963-EA8E-4CE8-A284-0216F2D69A9C}|esp2025_backend.csproj|solutionrelative:models\\grade.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -34,80 +14,20 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 3,
+          "SelectedChildIndex": 0,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "launchSettings.json",
-              "DocumentMoniker": "C:\\Users\\lapoi\\OneDrive\\Bureau\\ESP-2025\\ESP2025_CataloguePompier\\esp2025_backend\\Properties\\launchSettings.json",
-              "RelativeDocumentMoniker": "Properties\\launchSettings.json",
-              "ToolTip": "C:\\Users\\lapoi\\OneDrive\\Bureau\\ESP-2025\\ESP2025_CataloguePompier\\esp2025_backend\\Properties\\launchSettings.json",
-              "RelativeToolTip": "Properties\\launchSettings.json",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
-              "WhenOpened": "2025-02-03T19:36:37.925Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 0,
               "Title": "Program.cs",
               "DocumentMoniker": "C:\\Users\\lapoi\\OneDrive\\Bureau\\ESP-2025\\ESP2025_CataloguePompier\\esp2025_backend\\Program.cs",
               "RelativeDocumentMoniker": "Program.cs",
               "ToolTip": "C:\\Users\\lapoi\\OneDrive\\Bureau\\ESP-2025\\ESP2025_CataloguePompier\\esp2025_backend\\Program.cs",
               "RelativeToolTip": "Program.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAABUAAAAsAAAA",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAABsAAAAzAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-02-03T19:04:11.08Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "appsettings.json",
-              "DocumentMoniker": "C:\\Users\\lapoi\\OneDrive\\Bureau\\ESP-2025\\ESP2025_CataloguePompier\\esp2025_backend\\appsettings.json",
-              "RelativeDocumentMoniker": "appsettings.json",
-              "ToolTip": "C:\\Users\\lapoi\\OneDrive\\Bureau\\ESP-2025\\ESP2025_CataloguePompier\\esp2025_backend\\appsettings.json",
-              "RelativeToolTip": "appsettings.json",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAsAAAABAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
-              "WhenOpened": "2025-02-03T18:59:11.951Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "UsersController.cs",
-              "DocumentMoniker": "C:\\Users\\lapoi\\OneDrive\\Bureau\\ESP-2025\\ESP2025_CataloguePompier\\esp2025_backend\\Controllers\\UsersController.cs",
-              "RelativeDocumentMoniker": "Controllers\\UsersController.cs",
-              "ToolTip": "C:\\Users\\lapoi\\OneDrive\\Bureau\\ESP-2025\\ESP2025_CataloguePompier\\esp2025_backend\\Controllers\\UsersController.cs",
-              "RelativeToolTip": "Controllers\\UsersController.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAABwAAAAAAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-02-03T18:57:23.718Z",
+              "WhenOpened": "2025-02-03T19:04:11.08Z",
               "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 4,
-              "Title": "User.cs",
-              "DocumentMoniker": "C:\\Users\\lapoi\\OneDrive\\Bureau\\ESP-2025\\ESP2025_CataloguePompier\\esp2025_backend\\Models\\User.cs",
-              "RelativeDocumentMoniker": "Models\\User.cs",
-              "ToolTip": "C:\\Users\\lapoi\\OneDrive\\Bureau\\ESP-2025\\ESP2025_CataloguePompier\\esp2025_backend\\Models\\User.cs",
-              "RelativeToolTip": "Models\\User.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAsAAAAnAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-02-03T18:55:21.98Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 5,
-              "Title": "Grade.cs",
-              "DocumentMoniker": "C:\\Users\\lapoi\\OneDrive\\Bureau\\ESP-2025\\ESP2025_CataloguePompier\\esp2025_backend\\Models\\Grade.cs",
-              "RelativeDocumentMoniker": "Models\\Grade.cs",
-              "ToolTip": "C:\\Users\\lapoi\\OneDrive\\Bureau\\ESP-2025\\ESP2025_CataloguePompier\\esp2025_backend\\Models\\Grade.cs",
-              "RelativeToolTip": "Models\\Grade.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAgAAAAAAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-02-03T18:55:11.906Z"
             }
           ]
         }
