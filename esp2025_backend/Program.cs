@@ -13,6 +13,16 @@ namespace esp2025_backend
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("AllowReact", policy =>
+                {
+                    policy.AllowAnyOrigin()
+                          .AllowAnyHeader()
+                          .AllowAnyMethod();
+                });
+            });
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -26,6 +36,8 @@ namespace esp2025_backend
 
             app.UseAuthorization();
 
+            // Permettre à l'application React de communiquer avec l'API
+            app.UseCors("AllowReact");
 
             app.MapControllers();
 
