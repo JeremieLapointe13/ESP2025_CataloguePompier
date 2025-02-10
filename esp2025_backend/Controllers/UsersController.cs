@@ -28,7 +28,8 @@ namespace esp2025_backend.Controllers
 
             var users = await connection.QueryAsync<User, Grade, User>(
                 query,
-                (user, grade) => {
+                (user, grade) =>
+                {
                     user.Grade = grade;
                     return user;
                 },
@@ -37,4 +38,5 @@ namespace esp2025_backend.Controllers
 
             return Ok(users);
         }
+    }
 }
