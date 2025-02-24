@@ -4,7 +4,14 @@ namespace esp2025_backend
     {
         public static void Main(string[] args)
         {
+            // Log simple au démarrage
+            File.WriteAllText("/tmp/esp2025_debug.log",
+                $"Application démarrée à {DateTime.Now}\n" +
+                $"Environnement: {Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")}\n" +
+                $"Répertoire: {Directory.GetCurrentDirectory()}\n");
+
             var builder = WebApplication.CreateBuilder(args);
+
 
             // Add services to the container.
 
@@ -41,7 +48,12 @@ namespace esp2025_backend
 
             app.MapControllers();
 
-            app.MapGet("/", () => "API ESP2025 - TEST DE PUBLICATION - " + DateTime.Now.ToString());
+            app.MapGet("/", () =>
+            {
+                string message = $"API ESP2025 - DEPLOYMENT TEST - {DateTime.Now}";
+                File.AppendAllText("/tmp/esp2025_debug.log", $"Route racine accédée à {DateTime.Now}\n");
+                return message;
+            });
 
             app.Run();
         }
