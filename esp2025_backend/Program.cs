@@ -41,6 +41,8 @@ namespace esp2025_backend
 
             app.MapControllers();
 
+            app.MapGet("/", () => "API ESP2025 - TEST DE PUBLICATION - " + DateTime.Now.ToString());
+
             app.Run();
         }
     }
