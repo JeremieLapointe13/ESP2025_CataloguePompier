@@ -1,24 +1,8 @@
-import { useEffect, useState } from "react";
+import LoginPage from "./pages/LoginPage";
+import "bootstrap/dist/css/bootstrap.min.css";
 
 function App() {
-  const [users, setUsers] = useState([]);
-
-  useEffect(() => {
-    fetch("https://localhost:7063/api/users")
-      .then((res) => res.json())
-      .then((data) => setUsers(data));
-  }, []);
-
-  return (
-    <div style={{ padding: "20px" }}>
-      <h1>Liste des utilisateurs</h1>
-      {users.map((user) => (
-        <div key={user.idUser}>
-          {user.firstName} {user.lastName}
-        </div>
-      ))}
-    </div>
-  );
+  return <LoginPage />;
 }
 
 export default App;
