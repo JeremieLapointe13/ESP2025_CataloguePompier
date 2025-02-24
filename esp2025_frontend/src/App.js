@@ -28,7 +28,7 @@ function App() {
 
   return (
     <div style={{ padding: "20px" }}>
-      <h1>Liste des utilisateurs pistouille le magnifique</h1>
+      <h1>Liste des utilisateurs pistouille le magnifique gyat</h1>
       {loading && <p>Chargement en cours...</p>}
       {error && <p style={{ color: "red" }}>Erreur: {error}</p>}
       {!loading && !error && users.length === 0 && (
