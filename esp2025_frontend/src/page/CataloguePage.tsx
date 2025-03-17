@@ -1,13 +1,13 @@
 import React from "react";
-import Header from "../components/common/Header";
 import Catalogue from "../components/layout/Catalogue";
+import Header from "../components/common/Header";
 
-const CataloguePage = () => {
+const CataloguePage: React.FC = () => {
   return (
-    <div className="catalogue-page">
+    <>
       <Header />
       <Catalogue />
-    </div>
+    </>
   );
 };
 

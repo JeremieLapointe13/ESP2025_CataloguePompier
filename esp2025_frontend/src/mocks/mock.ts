@@ -1,7 +1,50 @@
-// mocks.js - Fichier de données mockées pour le catalogue
+// mocks.ts - Fichier de données mockées pour le catalogue
+
+// Interfaces pour les types
+interface Size {
+  idSize: number;
+  status: string;
+}
+
+interface FabricType {
+  idFabricType: number;
+  name: string;
+}
+
+interface Subcategory {
+  idCategory: number;
+  name: string;
+  parentId: number | null;
+  level: number;
+  description: string;
+}
+
+interface Category {
+  idCategory: number;
+  name: string;
+  parentId: number | null;
+  level: number;
+  description: string;
+  subcategories?: Subcategory[];
+}
+
+interface Product {
+  idProduct: number;
+  name: string;
+  points: number;
+  categoryId: number;
+  subcategoryId: number;
+  sizeId: number;
+  fabricTypeId: number;
+  productNo: string;
+  description: string;
+  imageURL: string | null;
+  isActive: boolean;
+  supplier: string;
+}
 
 // Tailles basées sur la base de données
-export const mockSizes = [
+export const mockSizes: Size[] = [
   { idSize: 1, status: "XS" },
   { idSize: 2, status: "S" },
   { idSize: 3, status: "M" },
@@ -13,7 +56,7 @@ export const mockSizes = [
 ];
 
 // Types de tissus basés sur la base de données
-export const mockFabricTypes = [
+export const mockFabricTypes: FabricType[] = [
   { idFabricType: 1, name: "Coton" },
   { idFabricType: 2, name: "Polyester" },
   { idFabricType: 3, name: "Gore-Tex" },
@@ -25,7 +68,7 @@ export const mockFabricTypes = [
 ];
 
 // Catégories et sous-catégories basées sur la base de données
-export const mockCategories = [
+export const mockCategories: Category[] = [
   {
     idCategory: 1,
     name: "Haut",
@@ -119,7 +162,7 @@ export const mockCategories = [
 ];
 
 // Produits basés sur la base de données
-export const mockProducts = [
+export const mockProducts: Product[] = [
   {
     idProduct: 1,
     name: "Blouson 3-1 Multi-fonctions Blauer",
@@ -267,3 +310,6 @@ export const mockProducts = [
     supplier: "Fire-DEX",
   },
 ];
+
+// Exporter les types pour pouvoir les utiliser ailleurs dans l'application
+export type { Size, FabricType, Category, Subcategory, Product };

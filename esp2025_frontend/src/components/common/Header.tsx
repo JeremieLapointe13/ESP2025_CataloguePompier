@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import {
   FaUserCircle,
   FaShoppingCart,
@@ -8,20 +8,24 @@ import {
   FaClipboardList,
   FaDollarSign,
 } from "react-icons/fa";
+// @ts-ignore
 import logoServiceIncendie from "../../assets/serviceIncendie.png";
 
-const Header = () => {
-  const [dropdownOpen, setDropdownOpen] = useState(false);
+interface HeaderProps {}
+
+const Header: React.FC<HeaderProps> = () => {
+  const [dropdownOpen, setDropdownOpen] = useState<boolean>(false);
   const navigate = useNavigate();
 
-  const toggleDropdown = () => {
+  const toggleDropdown = (): void => {
     setDropdownOpen(!dropdownOpen);
   };
 
-  const handleLogoClick = () => {
+  const handleLogoClick = (): void => {
     navigate("/catalogue");
   };
-  const handleCartClick = () => {
+
+  const handleCartClick = (): void => {
     navigate("/panier");
   };
 
@@ -47,42 +51,42 @@ const Header = () => {
         {/* Droite du header */}
         <div className="flex items-center space-x-4">
           <button className="p-1" onClick={handleCartClick}>
-            <FaShoppingCart className="text-2xl" />
+            {React.createElement(FaShoppingCart, { className: "text-2xl" })}
           </button>
 
           <div className="relative">
             <button onClick={toggleDropdown} className="p-1">
-              <FaUserCircle className="text-2xl" />
+              {React.createElement(FaUserCircle, { className: "text-2xl" })}
             </button>
 
             {dropdownOpen && (
               <div className="absolute right-0 mt-2 whitespace-nowrap rounded shadow-md border bg-white">
                 <a
                   href="#profile"
-                  className="block px-4 py-2 text-sm hover:bg-gray-100 flex items-center"
+                  className="px-4 py-2 text-sm hover:bg-gray-100 flex items-center"
                 >
-                  <FaUser className="mr-2" />
+                  {React.createElement(FaUser, { className: "mr-2" })}
                   Mon profil
                 </a>
                 <a
                   href="#orders"
-                  className="block px-4 py-2 text-sm hover:bg-gray-100 flex items-center"
+                  className="px-4 py-2 text-sm hover:bg-gray-100 flex items-center"
                 >
-                  <FaClipboardList className="mr-2" />
+                  {React.createElement(FaClipboardList, { className: "mr-2" })}
                   Mes commandes
                 </a>
                 <a
                   href="#profile"
-                  className="block px-4 py-2 text-sm hover:bg-gray-100 flex items-center"
+                  className="px-4 py-2 text-sm hover:bg-gray-100 flex items-center"
                 >
-                  <FaDollarSign className="mr-2" />
+                  {React.createElement(FaDollarSign, { className: "mr-2" })}
                   Mes points
                 </a>
                 <a
                   href="#logout"
-                  className="block px-4 py-2 text-sm hover:bg-gray-100 flex items-center"
+                  className="px-4 py-2 text-sm hover:bg-gray-100 flex items-center"
                 >
-                  <FaSignOutAlt className="mr-2" />
+                  {React.createElement(FaSignOutAlt, { className: "mr-2" })}
                   Déconnexion
                 </a>
               </div>
