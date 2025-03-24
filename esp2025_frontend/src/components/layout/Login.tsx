@@ -12,7 +12,6 @@ const Login: React.FC = () => {
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
-    console.log("Tentative de connexion avec:", email, password); // À ENLEVER
     navigate("/catalogue");
   };
 

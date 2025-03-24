@@ -1,16 +1,16 @@
 import React from "react";
-import Catalogue from "../components/layout/Catalogue";
+import ProductDetail from "../components/layout/ProductDetail";
 import Header from "../components/common/Header";
 import Footer from "../components/common/Footer";
 
-const CataloguePage: React.FC = () => {
+const ProductDetailPage: React.FC = () => {
   return (
     <div>
       <Header />
-      <Catalogue />
+      <ProductDetail />
       <Footer />
     </div>
   );
 };
 
-export default CataloguePage;
+export default ProductDetailPage;

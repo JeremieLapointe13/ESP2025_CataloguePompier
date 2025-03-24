@@ -1,162 +1,86 @@
 import React, { useState, useEffect } from "react";
-// @ts-ignore
-import { mockCategories, mockProducts } from "../../mocks/mock.ts";
+import { useNavigate } from "react-router-dom";
+import {
+  mockCategories,
+  mockProducts,
+  type Category,
+  type Product,
+} from "../../mocks/mock";
 // @ts-ignore
 import shrekImage from "../../assets/testshrek.png";
 
-// Interfaces simplifiées
-interface Subcategory {
-  idCategory: number;
-  name: string;
-}
-
-interface Category {
-  idCategory: number;
-  name: string;
-  subcategories?: Subcategory[];
-}
-
-interface Product {
-  idProduct: number;
-  name: string;
-  description: string;
-  points: number;
-  categoryId: number;
-  subcategoryId: number;
-  imageURL?: string | null;
-}
-
 const Catalogue: React.FC = () => {
-  // États essentiels uniquement
-  const [products, setProducts] = useState<Product[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [searchTerm, setSearchTerm] = useState<string>("");
-  const [categoryFilter, setCategoryFilter] = useState<string>("");
+  const [products, setProducts] = useState<Product[]>([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    setTimeout(() => {
-      setProducts(mockProducts);
-      setCategories(mockCategories);
-      setLoading(false);
-    }, 500);
+    setCategories(mockCategories);
+    setProducts(mockProducts);
   }, []);
 
-  // Filtrer les produits - logique simplifiée
-  const filteredProducts = products.filter((product) => {
-    const matchesSearch =
-      !searchTerm ||
-      product.name.toLowerCase().includes(searchTerm.toLowerCase());
-
-    // Vérifier si le filtre correspond à une catégorie principale ou une sous-catégorie
-    const matchesCategory =
-      !categoryFilter ||
-      product.categoryId === parseInt(categoryFilter) ||
-      product.subcategoryId === parseInt(categoryFilter);
-
-    return matchesSearch && matchesCategory;
-  });
-
-  if (loading)
+  // Fonction pour afficher une catégorie et ses sous-catégories de façon récursive
+  function renderCategory(category: Category, depth: number = 0) {
     return (
-      <div className="flex justify-center items-center min-h-screen">
-        Chargement...
+      <div
+        key={category.idCategory}
+        className={`mb-1 ${depth > 0 ? "ml-4" : ""}`}
+      >
+        {/* Catégorie avec bouton radio */}
+        <div className="flex items-center">
+          <input
+            type="radio"
+            id={`cat-${category.idCategory}`}
+            name="category"
+            value={category.idCategory}
+            className="mr-2"
+          />
+          <label htmlFor={`cat-${category.idCategory}`}>{category.name}</label>
+        </div>
+
+        {/* Sous-catégories (appel récursif) */}
+        {category.subcategories && category.subcategories.length > 0 && (
+          <div className="ml-2">
+            {category.subcategories.map((subcat) =>
+              renderCategory(subcat, depth + 1)
+            )}
+          </div>
+        )}
       </div>
     );
+  }
 
+  const handleProductClick = (productId: number) => {
+    navigate(`/product/${productId}`);
+  };
+
+  // Rendu principal du composant
   return (
     <div className="flex min-h-screen bg-gray-50">
-      {/* Panneau des filtres simplifié */}
+      {/* Panneau des catégories */}
       <div className="w-64 bg-white p-4 shadow-md">
-        <div className="flex justify-between items-center mb-4">
-          <h2 className="text-lg font-bold">Filtres</h2>
-          <button
-            onClick={() => {
-              setCategoryFilter("");
-              setSearchTerm("");
-            }}
-            className="text-xs text-blue-600"
-          >
-            Réinitialiser
-          </button>
-        </div>
-
-        {/* Catégories simplifiées */}
-        <div>
-          <h3 className="font-semibold mb-2 border-b pb-1">Type</h3>
-          <div className="ml-1 space-y-2">
-            {categories.map((category) => (
-              <div key={category.idCategory} className="mb-2">
-                {/* Catégorie principale */}
-                <div className="flex items-center font-medium">
-                  <input
-                    type="radio"
-                    id={`category-${category.idCategory}`}
-                    name="category"
-                    value={category.idCategory}
-                    className="mr-2"
-                    onChange={(e) => setCategoryFilter(e.target.value)}
-                    checked={categoryFilter === category.idCategory.toString()}
-                  />
-                  <label htmlFor={`category-${category.idCategory}`}>
-                    {category.name}
-                  </label>
-                </div>
-
-                {/* Sous-catégories */}
-                <div className="ml-6 mt-1">
-                  {category.subcategories?.map((subcat) => (
-                    <div
-                      key={subcat.idCategory}
-                      className="flex items-center text-sm py-1"
-                    >
-                      <input
-                        type="radio"
-                        id={`subcat-${subcat.idCategory}`}
-                        name="category"
-                        value={subcat.idCategory}
-                        className="mr-2"
-                        onChange={(e) => setCategoryFilter(e.target.value)}
-                        checked={
-                          categoryFilter === subcat.idCategory.toString()
-                        }
-                      />
-                      <label htmlFor={`subcat-${subcat.idCategory}`}>
-                        {subcat.name}
-                      </label>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            ))}
-          </div>
+        <h2 className="text-lg font-bold mb-4">Catégories</h2>
+        <div className="space-y-2">
+          {/* Rendu de toutes les catégories principales */}
+          {categories.map((category) => renderCategory(category))}
         </div>
       </div>
 
-      {/* Contenu principal */}
+      {/* Zone d'affichage des produits */}
       <div className="flex-1 p-6">
         <h1 className="text-2xl font-bold text-center mb-6">
           Catalogue Caserne RDL 2025
         </h1>
 
-        {/* Barre de recherche */}
-        <div className="flex justify-center mb-6">
-          <input
-            type="text"
-            placeholder="Rechercher un produit..."
-            className="px-4 py-2 border rounded w-full max-w-md"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
-        </div>
-
         {/* Grille de produits */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredProducts.map((product) => (
+          {products.map((product) => (
             <div
               key={product.idProduct}
-              className="bg-white rounded shadow p-4"
+              className="bg-white rounded shadow p-4 cursor-pointer flex flex-col h-full"
+              onClick={() => handleProductClick(product.idProduct)}
             >
+              {/* Image et badge de points */}
               <div className="relative h-48 mb-3">
                 <img
                   src={product.imageURL || shrekImage}
@@ -167,31 +91,20 @@ const Catalogue: React.FC = () => {
                   {product.points} points
                 </div>
               </div>
+
+              {/* Informations du produit */}
               <h3 className="font-semibold text-lg mb-1">{product.name}</h3>
-              <p className="text-sm text-gray-500 mb-3 line-clamp-2">
+              <p className="text-sm text-gray-500 mb-3 line-clamp-2 flex-grow">
                 {product.description}
               </p>
-              <button className="w-full bg-gray-800 text-white py-2 rounded">
+
+              {/* Button pour ajouter au panier*/}
+              <button className="w-full bg-gray-800  hover:bg-red-800 text-white py-2 rounded mt-auto">
                 Ajouter au panier
               </button>
             </div>
           ))}
         </div>
-
-        {filteredProducts.length === 0 && (
-          <div className="text-center py-10">
-            Aucun produit trouvé.{" "}
-            <button
-              onClick={() => {
-                setCategoryFilter("");
-                setSearchTerm("");
-              }}
-              className="text-blue-600"
-            >
-              Réinitialiser
-            </button>
-          </div>
-        )}
       </div>
     </div>
   );
