@@ -5,9 +5,11 @@ import AdminProduct from "../components/layout/AdminProduct";
 
 const AdminProductPage: React.FC = () => {
   return (
-    <div>
+    <div className="flex flex-col h-screen">
       <Header />
-      <AdminProduct />
+      <div className="flex-grow">
+        <AdminProduct />
+      </div>
       <Footer />
     </div>
   );

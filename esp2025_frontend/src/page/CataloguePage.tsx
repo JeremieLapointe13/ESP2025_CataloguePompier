@@ -5,9 +5,11 @@ import Footer from "../components/common/Footer";
 
 const CataloguePage: React.FC = () => {
   return (
-    <div>
+    <div className="flex flex-col h-screen">
       <Header />
-      <Catalogue />
+      <div className="flex-grow">
+        <Catalogue />
+      </div>
       <Footer />
     </div>
   );

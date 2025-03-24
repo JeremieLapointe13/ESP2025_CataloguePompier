@@ -65,7 +65,12 @@ const Header: React.FC = () => {
                   Mon profil
                 </a>
                 <a
-                  href="#orders"
+                  href="#"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    navigate("/commande");
+                    setDropdownOpen(false);
+                  }}
                   className="px-4 py-2 text-sm hover:bg-gray-100 flex items-center"
                 >
                   {React.createElement(FaClipboardList, {

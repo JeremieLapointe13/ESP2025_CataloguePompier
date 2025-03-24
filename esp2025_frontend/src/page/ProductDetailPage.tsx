@@ -5,9 +5,11 @@ import Footer from "../components/common/Footer";
 
 const ProductDetailPage: React.FC = () => {
   return (
-    <div>
+    <div className="flex flex-col h-screen">
       <Header />
-      <ProductDetail />
+      <div className="flex-grow">
+        <ProductDetail />
+      </div>
       <Footer />
     </div>
   );

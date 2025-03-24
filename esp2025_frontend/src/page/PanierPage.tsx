@@ -5,9 +5,11 @@ import Footer from "../components/common/Footer";
 
 const PanierPage: React.FC = () => {
   return (
-    <div>
+    <div className="flex flex-col h-screen">
       <Header />
-      <Panier />
+      <div className="flex-grow">
+        <Panier />
+      </div>
       <Footer />
     </div>
   );

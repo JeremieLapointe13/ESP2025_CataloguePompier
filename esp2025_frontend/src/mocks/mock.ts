@@ -41,6 +41,7 @@ interface Product {
   imageURL: string | null;
   isActive: boolean;
   supplier: string;
+  quantity: number;
 }
 
 // Interface pour représenter les grades
@@ -64,6 +65,34 @@ interface User {
   points: number;
   isAdmin: boolean;
   isActive: boolean;
+}
+
+// Interfaces pour représenter les commandes selon le diagramme de classe
+
+// Status de commande
+interface OrderStatus {
+  idOrderStatus: number;
+  status: string;
+}
+
+// Item de commande
+interface OrderItem {
+  idOrderItem: number;
+  orderId: number;
+  productId: number;
+  sizeId: number;
+  quantity: number;
+  pointsAtPurchase: number;
+}
+
+// Commande
+interface Order {
+  idOrder: number;
+  userId: number;
+  orderStatusId: number;
+  orderDate: string; // On utilise string pour simplifier, mais ça pourrait être Date
+  expectedDeliveryDate: string;
+  actualDeliveryDate?: string; // Optionnel car peut être null
 }
 
 // Tailles basées sur la base de données
@@ -223,6 +252,7 @@ export const mockProducts: Product[] = [
     imageURL: null,
     isActive: true,
     supplier: "Blauer",
+    quantity: 15,
   },
   {
     idProduct: 2,
@@ -237,6 +267,7 @@ export const mockProducts: Product[] = [
     imageURL: null,
     isActive: true,
     supplier: "Blauer",
+    quantity: 8,
   },
   {
     idProduct: 3,
@@ -251,6 +282,7 @@ export const mockProducts: Product[] = [
     imageURL: null,
     isActive: true,
     supplier: "Broderie Signature",
+    quantity: 10,
   },
   {
     idProduct: 4,
@@ -265,6 +297,7 @@ export const mockProducts: Product[] = [
     imageURL: null,
     isActive: true,
     supplier: "Broderie Signature",
+    quantity: 5,
   },
 
   // CHANDAILS
@@ -281,6 +314,7 @@ export const mockProducts: Product[] = [
     imageURL: null,
     isActive: true,
     supplier: "Broderie Signature",
+    quantity: 7,
   },
   {
     idProduct: 6,
@@ -295,6 +329,7 @@ export const mockProducts: Product[] = [
     imageURL: null,
     isActive: true,
     supplier: "Broderie Signature",
+    quantity: 3,
   },
 
   // CHEMISES
@@ -311,6 +346,7 @@ export const mockProducts: Product[] = [
     imageURL: null,
     isActive: true,
     supplier: "Blauer",
+    quantity: 5,
   },
   {
     idProduct: 8,
@@ -324,6 +360,7 @@ export const mockProducts: Product[] = [
     imageURL: null,
     isActive: true,
     supplier: "Blauer",
+    quantity: 2,
   },
   {
     idProduct: 9,
@@ -338,6 +375,7 @@ export const mockProducts: Product[] = [
     imageURL: null,
     isActive: true,
     supplier: "Blauer",
+    quantity: 4,
   },
 
   // T-SHIRTS & POLOS
@@ -353,6 +391,7 @@ export const mockProducts: Product[] = [
     imageURL: null,
     isActive: true,
     supplier: "Blauer",
+    quantity: 6,
   },
   {
     idProduct: 11,
@@ -367,6 +406,7 @@ export const mockProducts: Product[] = [
     imageURL: null,
     isActive: true,
     supplier: "Broderie Signature",
+    quantity: 8,
   },
   {
     idProduct: 12,
@@ -380,6 +420,7 @@ export const mockProducts: Product[] = [
     imageURL: null,
     isActive: true,
     supplier: "Blauer",
+    quantity: 3,
   },
 
   // PANTALONS
@@ -396,6 +437,7 @@ export const mockProducts: Product[] = [
     imageURL: null,
     isActive: true,
     supplier: "Blauer",
+    quantity: 7,
   },
   {
     idProduct: 14,
@@ -410,6 +452,7 @@ export const mockProducts: Product[] = [
     imageURL: null,
     isActive: true,
     supplier: "Blauer",
+    quantity: 4,
   },
 
   // SHORTS
@@ -426,6 +469,7 @@ export const mockProducts: Product[] = [
     imageURL: null,
     isActive: true,
     supplier: "Broderie Signature",
+    quantity: 2,
   },
   {
     idProduct: 16,
@@ -439,6 +483,7 @@ export const mockProducts: Product[] = [
     imageURL: null,
     isActive: true,
     supplier: "Broderie Signature",
+    quantity: 1,
   },
 
   // COUVRE-CHEFS
@@ -454,6 +499,7 @@ export const mockProducts: Product[] = [
     imageURL: null,
     isActive: true,
     supplier: "Broderie Signature",
+    quantity: 5,
   },
   {
     idProduct: 18,
@@ -467,6 +513,7 @@ export const mockProducts: Product[] = [
     imageURL: null,
     isActive: true,
     supplier: "Broderie Signature",
+    quantity: 3,
   },
 
   // CEINTURES
@@ -482,6 +529,7 @@ export const mockProducts: Product[] = [
     imageURL: null,
     isActive: true,
     supplier: "Blauer",
+    quantity: 2,
   },
 
   // BADGES
@@ -497,6 +545,7 @@ export const mockProducts: Product[] = [
     imageURL: null,
     isActive: true,
     supplier: "Autre",
+    quantity: 1,
   },
   {
     idProduct: 21,
@@ -511,6 +560,7 @@ export const mockProducts: Product[] = [
     imageURL: null,
     isActive: true,
     supplier: "Autre",
+    quantity: 1,
   },
 
   // CHAUSSURES
@@ -527,6 +577,7 @@ export const mockProducts: Product[] = [
     imageURL: null,
     isActive: true,
     supplier: "Fire-DEX",
+    quantity: 1,
   },
   {
     idProduct: 23,
@@ -541,6 +592,7 @@ export const mockProducts: Product[] = [
     imageURL: null,
     isActive: true,
     supplier: "Autre",
+    quantity: 1,
   },
 
   // SACS
@@ -556,6 +608,7 @@ export const mockProducts: Product[] = [
     imageURL: null,
     isActive: true,
     supplier: "OGIO",
+    quantity: 20,
   },
 ];
 
@@ -597,7 +650,149 @@ export const mockUsers: User[] = [
     isAdmin: true,
     isActive: true,
   },
+  {
+    idUser: 3,
+    gradeId: 1, // Pompier
+    email: "john.doe@casernerdl.ca",
+    ville: "Rivière-du-Loup",
+    province: "Québec",
+    pays: "Canada",
+    noMatricule: 3,
+    password: "Patate123",
+    firstName: "John",
+    lastName: "Doe",
+    points: 0,
+    isAdmin: false,
+    isActive: true,
+  },
+];
+
+// Données mockées pour les statuts de commande
+export const mockOrderStatuses: OrderStatus[] = [
+  { idOrderStatus: 1, status: "pending" },
+  { idOrderStatus: 2, status: "shipped" },
+  { idOrderStatus: 3, status: "delivered" },
+  { idOrderStatus: 4, status: "cancelled" },
+];
+
+// Données mockées pour les commandes
+export const mockOrders: Order[] = [
+  {
+    idOrder: 101,
+    userId: 1, // Jean Pistouille
+    orderStatusId: 1, // pending
+    orderDate: "2025-01-27",
+    expectedDeliveryDate: "2025-01-29",
+  },
+  {
+    idOrder: 102,
+    userId: 1, // Jean Pistouille
+    orderStatusId: 3, // delivered
+    orderDate: "2025-01-25",
+    expectedDeliveryDate: "2025-01-27",
+    actualDeliveryDate: "2025-01-27",
+  },
+  {
+    idOrder: 103,
+    userId: 3, // John Doe
+    orderStatusId: 3, // delivered
+    orderDate: "2025-01-15",
+    expectedDeliveryDate: "2025-01-18",
+    actualDeliveryDate: "2025-01-18",
+  },
+];
+
+// Données mockées pour les items de commande
+export const mockOrderItems: OrderItem[] = [
+  // Items pour la commande 101 (pending)
+  {
+    idOrderItem: 1001,
+    orderId: 101,
+    productId: 1, // Blouson 3-1 Multi-fonctions Blauer
+    sizeId: 3, // M
+    quantity: 1,
+    pointsAtPurchase: 229,
+  },
+
+  // Items pour la commande 102 (delivered)
+  {
+    idOrderItem: 1002,
+    orderId: 102,
+    productId: 2, // Manteau Blauer 3/1 en Gore-Tex
+    sizeId: 4, // L
+    quantity: 1,
+    pointsAtPurchase: 329,
+  },
+  {
+    idOrderItem: 1003,
+    orderId: 102,
+    productId: 10, // T-Shirt 3XDRY
+    sizeId: 3, // M
+    quantity: 1,
+    pointsAtPurchase: 27,
+  },
+  {
+    idOrderItem: 1004,
+    orderId: 102,
+    productId: 17, // Casquette
+    sizeId: 8, // Taille unique
+    quantity: 1,
+    pointsAtPurchase: 18,
+  },
+  {
+    idOrderItem: 1005,
+    orderId: 102,
+    productId: 11, // T-Shirt d'entraînement
+    sizeId: 4, // L
+    quantity: 2,
+    pointsAtPurchase: 35 * 2,
+  },
+  {
+    idOrderItem: 1006,
+    orderId: 102,
+    productId: 15, // Culotte courte
+    sizeId: 4, // L
+    quantity: 1,
+    pointsAtPurchase: 20,
+  },
+
+  // Items pour la commande 103 (delivered)
+  {
+    idOrderItem: 1007,
+    orderId: 103,
+    productId: 7, // Chemise manche longue
+    sizeId: 4, // L
+    quantity: 2,
+    pointsAtPurchase: 29 * 2,
+  },
+  {
+    idOrderItem: 1008,
+    orderId: 103,
+    productId: 13, // Pantalon poches Cargo
+    sizeId: 3, // M
+    quantity: 1,
+    pointsAtPurchase: 42,
+  },
+  {
+    idOrderItem: 1009,
+    orderId: 103,
+    productId: 18, // Tuque
+    sizeId: 8, // Taille unique
+    quantity: 1,
+    pointsAtPurchase: 15,
+  },
 ];
 
 // Exporter les types pour pouvoir les utiliser ailleurs dans l'application
-export type { Size, FabricType, Category, Subcategory, Product, User, Grade };
+export type {
+  Size,
+  FabricType,
+  Category,
+  Subcategory,
+  Product,
+  User,
+  Grade,
+  Order,
+  OrderItem,
+  OrderStatus,
+};
