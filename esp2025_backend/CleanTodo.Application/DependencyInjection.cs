@@ -1,4 +1,4 @@
-﻿using CleanTodo.Application.Service.Todo;
+﻿using CleanTodo.Application.Service.User;
 using CleanTodo.Application.UseCase;
 using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
@@ -9,13 +9,9 @@ public static class DependencyInjection
 {
     public static IServiceCollection AddApplication(this IServiceCollection services)
     {
-
         services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
-        services.AddScoped<ITodoService, TodoService>();
-        services.AddScoped<ICreateTodoUseCase, CreateTodoUseCase>();
-        services.AddScoped<IDeleteTodoUseCase, DeleteTodoUseCase>();
-        services.AddScoped<IGetAllTodosUseCase, GetAllTodosUseCase>();
-        services.AddScoped<IToggleTodoCompleteStatusUseCase, ToggleTodoCompleteStatusUseCase>();
+        services.AddScoped<IUserService, UserService>();
+        services.AddScoped<IGetAllUsersUseCase, GetAllUsersUseCase>();
 
         return services;
     }

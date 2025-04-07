@@ -1,4 +1,5 @@
 ﻿using CleanTodo.Domain.Interfaces.Repositories;
+using CleanTodo.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -10,14 +11,16 @@ public static class DependencyInjection
         this IServiceCollection services,
         IConfiguration configuration)
     {
-        // Register DbContext
+        // Register DbContext with MySQL
+        var connectionString = configuration.GetConnectionString("DefaultConnection");
         services.AddDbContext<AppDbContext>(options =>
-            options.UseSqlServer(
-                configuration.GetConnectionString("DefaultConnection"),
+            options.UseMySql(
+                connectionString,
+                ServerVersion.AutoDetect(connectionString),
                 b => b.MigrationsAssembly(typeof(AppDbContext).Assembly.FullName)));
 
         // Register Repositories
-        services.AddScoped<ITodoRepository, TodoRepository>();
+        services.AddScoped<IUserRepository, UserRepository>();
 
         return services;
     }

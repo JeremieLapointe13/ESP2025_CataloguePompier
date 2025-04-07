@@ -2,6 +2,7 @@
 using CleanTodo.Domain.Interfaces.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
+using CleanTodo.Infrastructure;
 
 public class TodoRepository : ITodoRepository
 {
