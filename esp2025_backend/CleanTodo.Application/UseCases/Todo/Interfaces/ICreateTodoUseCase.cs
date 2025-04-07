@@ -1,6 +1,6 @@
-﻿using CleanTodo.Application.DTOS;
+﻿using ESP2025.Application.DTOS;
 
-namespace CleanTodo.Application.UseCase;
+namespace ESP2025.Application.UseCase;
 
 public interface ICreateTodoUseCase
 {

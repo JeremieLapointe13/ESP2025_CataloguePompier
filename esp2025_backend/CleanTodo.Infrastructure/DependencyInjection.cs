@@ -1,10 +1,10 @@
-﻿using CleanTodo.Domain.Interfaces.Repositories;
-using CleanTodo.Infrastructure.Repositories;
+﻿using ESP2025.Domain.Interfaces.Repositories;
+using ESP2025.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace CleanTodo.Infrastructure;
+namespace ESP2025.Infrastructure;
 public static class DependencyInjection
 {
     public static IServiceCollection AddInfrastructure(

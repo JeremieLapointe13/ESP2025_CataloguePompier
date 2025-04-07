@@ -1,10 +1,10 @@
-﻿using CleanTodo.Application.Service.User;
-using CleanTodo.Application.UseCase;
+﻿using ESP2025.Application.Service.User;
+using ESP2025.Application.UseCase;
 using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
 
-namespace CleanTodo.Application;
+namespace ESP2025.Application;
 public static class DependencyInjection
 {
     public static IServiceCollection AddApplication(this IServiceCollection services)
@@ -12,6 +12,10 @@ public static class DependencyInjection
         services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
         services.AddScoped<IUserService, UserService>();
         services.AddScoped<IGetAllUsersUseCase, GetAllUsersUseCase>();
+        services.AddScoped<IGetUserByIdUseCase, GetUserByIdUseCase>();
+        services.AddScoped<ICreateUserUseCase, CreateUserUseCase>();
+        services.AddScoped<IDeleteUserUseCase, DeleteUserUseCase>();
+        services.AddScoped<IModifyStatusUserUseCase, ModifyStatusUserUseCase>();
 
         return services;
     }

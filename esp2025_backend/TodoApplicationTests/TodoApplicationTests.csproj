@@ -10,6 +10,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
     <PackageReference Include="coverlet.collector" Version="6.0.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.8.0" />
     <PackageReference Include="Moq" Version="4.20.72" />
@@ -19,8 +20,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\CleanTodo.Application\CleanTodo.Application.csproj" />
-    <ProjectReference Include="..\CleanTodo.Domain\CleanTodo.Domain.csproj" />
+    <ProjectReference Include="..\CleanTodo.Application\ESP2025.Application.csproj" />
+    <ProjectReference Include="..\CleanTodo.Domain\ESP2025.Domain.csproj" />
   </ItemGroup>
 
   <ItemGroup>

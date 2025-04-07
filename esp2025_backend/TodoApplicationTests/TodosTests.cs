@@ -1,9 +1,9 @@
-using CleanTodo.Application.DTOS;
-using CleanTodo.Application.Entities;
-using CleanTodo.Application.Exceptions;
-using CleanTodo.Application.Service.Todo;
-using CleanTodo.Application.UseCase;
-using CleanTodo.Domain.Interfaces.Repositories;
+using ESP2025.Application.DTOS;
+using ESP2025.Application.Entities;
+using ESP2025.Application.Exceptions;
+using ESP2025.Application.Service.Todo;
+using ESP2025.Application.UseCase;
+using ESP2025.Domain.Interfaces.Repositories;
 using Moq;
 
 namespace TodoApplicationTests;

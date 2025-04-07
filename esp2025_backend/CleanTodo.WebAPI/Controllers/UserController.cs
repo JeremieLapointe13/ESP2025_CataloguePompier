@@ -1,25 +1,17 @@
-using CleanTodo.Application.DTOS;
-using CleanTodo.Application.Exceptions;
-using CleanTodo.Application.UseCase;
+using ESP2025.Application.DTOS;
+using ESP2025.Application.Exceptions;
+using ESP2025.Application.UseCase;
 using Microsoft.AspNetCore.Mvc;
 
-namespace CleanTodo.API.Controllers;
+namespace ESP2025.API.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class UsersController : ControllerBase
+public class AuthController : ControllerBase
 {
-    private readonly IGetAllUsersUseCase _getAllUsersUseCase;
 
-    public UsersController(IGetAllUsersUseCase getAllUsersUseCase)
+    public AuthController()
     {
-        _getAllUsersUseCase = getAllUsersUseCase;
-    }
 
-    [HttpGet]
-    public async Task<ActionResult<IEnumerable<UserDto>>> GetAll()
-    {
-        var users = await _getAllUsersUseCase.Execute();
-        return Ok(users);
     }
 }

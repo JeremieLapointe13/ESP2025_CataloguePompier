@@ -1,8 +1,8 @@
-﻿using CleanTodo.Application.DTOS;
-using CleanTodo.Application.Exceptions;
-using CleanTodo.Domain.Interfaces.Repositories;
+﻿using ESP2025.Application.DTOS;
+using ESP2025.Application.Exceptions;
+using ESP2025.Domain.Interfaces.Repositories;
 
-namespace CleanTodo.Application.Service.Todo;
+namespace ESP2025.Application.Service.Todo;
 
 
 public class TodoService : ITodoService

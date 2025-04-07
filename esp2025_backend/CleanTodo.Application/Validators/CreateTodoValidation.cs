@@ -1,7 +1,7 @@
-﻿using CleanTodo.Application.DTOS;
+﻿using ESP2025.Application.DTOS;
 using FluentValidation;
 
-namespace CleanTodo.Application.Validators;
+namespace ESP2025.Application.Validators;
 
 // Valide automatiquement CreateTodoDto quand il est créé dans le controller
 public class CreateTodoValidation : AbstractValidator<CreateTodoDto>

@@ -1,6 +1,6 @@
-﻿using CleanTodo.Application.DTOS;
+﻿using ESP2025.Application.DTOS;
 
-namespace CleanTodo.Application.Service.User;
+namespace ESP2025.Application.Service.User;
 
 public interface IUserService
 {

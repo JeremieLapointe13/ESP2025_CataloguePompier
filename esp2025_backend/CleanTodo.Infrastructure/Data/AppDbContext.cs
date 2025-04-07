@@ -1,5 +1,5 @@
-﻿using CleanTodo.Application.Entities;
-using CleanTodo.Domain.Entities;
+﻿using ESP2025.Application.Entities;
+using ESP2025.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
 public class AppDbContext : DbContext

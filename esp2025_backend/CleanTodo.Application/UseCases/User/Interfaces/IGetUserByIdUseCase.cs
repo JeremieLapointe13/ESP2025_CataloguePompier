@@ -1,7 +1,7 @@
 ﻿using ESP2025.Application.DTOS;
 
 namespace ESP2025.Application.UseCase;
-public interface IGetAllUsersUseCase
+public interface IGetUserByIdUseCase
 {
-    Task<IList<UserDto>> Execute();
+    Task<UserDto?> Execute(int id);
 }

@@ -1,4 +1,4 @@
-﻿namespace CleanTodo.Application.UseCase;
+﻿namespace ESP2025.Application.UseCase;
 
 public interface IDeleteTodoUseCase
 {

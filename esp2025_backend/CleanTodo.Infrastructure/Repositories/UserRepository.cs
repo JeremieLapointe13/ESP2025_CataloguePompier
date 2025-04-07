@@ -1,8 +1,8 @@
-﻿using CleanTodo.Domain.Entities;
-using CleanTodo.Domain.Interfaces.Repositories;
+﻿using ESP2025.Domain.Entities;
+using ESP2025.Domain.Interfaces.Repositories;
 using Microsoft.EntityFrameworkCore;
 
-namespace CleanTodo.Infrastructure.Repositories;
+namespace ESP2025.Infrastructure.Repositories;
 
 public class UserRepository : IUserRepository
 {
@@ -20,10 +20,39 @@ public class UserRepository : IUserRepository
             .ToListAsync();
     }
 
-    public async Task<User?> FindById(int id)
+    public async Task<User?> FindById(int idUser)
     {
         return await _context.User
             .Include(u => u.Grade)
-            .FirstOrDefaultAsync(x => x.IdUser == id);
+            .FirstOrDefaultAsync(x => x.IdUser == idUser);
+    }
+
+    public async Task<User> Create(User user)
+    {
+        _context.User.Add(user);
+        await _context.SaveChangesAsync();
+        return user;
+    }
+
+    public async Task Delete(int idUser)
+    {
+        var user = await _context.User.FindAsync(idUser);
+        if (user != null)
+        {
+            _context.User.Remove(user);
+            await _context.SaveChangesAsync();
+        }
+    }
+
+    public async Task<User?> UpdateStatus(int idUser, bool isActive)
+    {
+        var user = await _context.User.FindAsync(idUser);
+        if (user != null)
+        {
+            user.IsActive = isActive;
+            _context.User.Update(user);
+            await _context.SaveChangesAsync();
+        }
+        return user;
     }
 }

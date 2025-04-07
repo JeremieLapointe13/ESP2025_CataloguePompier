@@ -1,7 +1,7 @@
-﻿using CleanTodo.Application.Service.Todo;
-using CleanTodo.Domain.Interfaces.Repositories;
+﻿using ESP2025.Application.Service.Todo;
+using ESP2025.Domain.Interfaces.Repositories;
 
-namespace CleanTodo.Application.UseCase;
+namespace ESP2025.Application.UseCase;
 
 public class ToggleTodoCompleteStatusUseCase : IToggleTodoCompleteStatusUseCase
 {

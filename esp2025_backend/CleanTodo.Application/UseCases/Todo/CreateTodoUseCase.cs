@@ -1,8 +1,8 @@
-﻿using CleanTodo.Application.DTOS;
-using CleanTodo.Application.Entities;
-using CleanTodo.Domain.Interfaces.Repositories;
+﻿using ESP2025.Application.DTOS;
+using ESP2025.Application.Entities;
+using ESP2025.Domain.Interfaces.Repositories;
 
-namespace CleanTodo.Application.UseCase;
+namespace ESP2025.Application.UseCase;
 
 public class CreateTodoUseCase : ICreateTodoUseCase
 {

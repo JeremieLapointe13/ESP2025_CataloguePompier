@@ -1,7 +1,7 @@
 
 // Program.cs
-using CleanTodo.Application;
-using CleanTodo.Infrastructure;
+using ESP2025.Application;
+using ESP2025.Infrastructure;
 
 public class Program
 {

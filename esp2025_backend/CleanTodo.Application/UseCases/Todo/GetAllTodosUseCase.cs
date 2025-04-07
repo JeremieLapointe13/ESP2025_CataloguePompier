@@ -1,7 +1,7 @@
-﻿using CleanTodo.Application.DTOS;
-using CleanTodo.Domain.Interfaces.Repositories;
+﻿using ESP2025.Application.DTOS;
+using ESP2025.Domain.Interfaces.Repositories;
 
-namespace CleanTodo.Application.UseCase;
+namespace ESP2025.Application.UseCase;
 
 public class GetAllTodosUseCase : IGetAllTodosUseCase
 {

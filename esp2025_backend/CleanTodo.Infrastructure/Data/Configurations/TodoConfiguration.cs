@@ -1,4 +1,4 @@
-﻿using CleanTodo.Application.Entities;
+﻿using ESP2025.Application.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

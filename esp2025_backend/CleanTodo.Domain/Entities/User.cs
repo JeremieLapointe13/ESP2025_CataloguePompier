@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace CleanTodo.Domain.Entities;
+namespace ESP2025.Domain.Entities;
 
 public partial class User
 {

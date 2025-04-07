@@ -1,6 +1,6 @@
-﻿using CleanTodo.Application.Entities;
+﻿using ESP2025.Application.Entities;
 
-namespace CleanTodo.Domain.Interfaces.Repositories;
+namespace ESP2025.Domain.Interfaces.Repositories;
 
 public interface ITodoRepository
 {

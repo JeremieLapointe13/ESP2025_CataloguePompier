@@ -1,8 +1,8 @@
-﻿using CleanTodo.Domain.Entities;
+﻿using ESP2025.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace CleanTodo.Infrastructure.Data.Configurations;
+namespace ESP2025.Infrastructure.Data.Configurations;
 
 public class UserConfiguration : IEntityTypeConfiguration<User>
 {

@@ -1,4 +1,4 @@
-﻿namespace CleanTodo.Application.Entities;
+﻿namespace ESP2025.Application.Entities;
 
 public class Todo
 {

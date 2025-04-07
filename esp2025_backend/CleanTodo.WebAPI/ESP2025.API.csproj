@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.10" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.3">
       <PrivateAssets>all</PrivateAssets>
@@ -17,8 +18,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\CleanTodo.Application\CleanTodo.Application.csproj" />
-    <ProjectReference Include="..\CleanTodo.Infrastructure\CleanTodo.Infrastructure.csproj" />
+    <ProjectReference Include="..\CleanTodo.Application\ESP2025.Application.csproj" />
+    <ProjectReference Include="..\CleanTodo.Infrastructure\ESP2025.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

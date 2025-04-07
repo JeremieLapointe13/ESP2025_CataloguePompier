@@ -1,8 +1,8 @@
-﻿using CleanTodo.Application.Entities;
-using CleanTodo.Domain.Interfaces.Repositories;
+﻿using ESP2025.Application.Entities;
+using ESP2025.Domain.Interfaces.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
-using CleanTodo.Infrastructure;
+using ESP2025.Infrastructure;
 
 public class TodoRepository : ITodoRepository
 {

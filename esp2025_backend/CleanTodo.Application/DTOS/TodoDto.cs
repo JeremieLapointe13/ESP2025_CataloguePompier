@@ -1,6 +1,6 @@
-﻿using CleanTodo.Application.Entities;
+﻿using ESP2025.Application.Entities;
 
-namespace CleanTodo.Application.DTOS;
+namespace ESP2025.Application.DTOS;
 
 public class TodoDto
 {
