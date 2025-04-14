@@ -1,5 +1,7 @@
 ﻿using ESP2025.Application.Service.User;
 using ESP2025.Application.UseCase;
+using ESP2025.Application.UseCase.Auth;
+using ESP2025.Application.Services.Auth;
 using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
@@ -16,6 +18,10 @@ public static class DependencyInjection
         services.AddScoped<ICreateUserUseCase, CreateUserUseCase>();
         services.AddScoped<IDeleteUserUseCase, DeleteUserUseCase>();
         services.AddScoped<IModifyStatusUserUseCase, ModifyStatusUserUseCase>();
+
+        services.AddScoped<IAuthService, AuthService>();
+        services.AddScoped<IRegisterUseCase, RegisterUseCase>();
+        services.AddScoped<ILoginUseCase, LoginUseCase>();
 
         return services;
     }

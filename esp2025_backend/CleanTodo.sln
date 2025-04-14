@@ -11,7 +11,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ESP2025.Application", "Clea
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ESP2025.Infrastructure", "CleanTodo.Infrastructure\ESP2025.Infrastructure.csproj", "{0605D142-1EAC-4D7A-BE36-55F7BE10B018}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TodoApplicationTests", "TodoApplicationTests\TodoApplicationTests.csproj", "{4D3A12F0-A876-4CD7-83FA-00A7B47AE3A8}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ESP2025Test", "TodoApplicationTests\ESP2025Test.csproj", "{4D3A12F0-A876-4CD7-83FA-00A7B47AE3A8}"
 	ProjectSection(ProjectDependencies) = postProject
 		{8055F346-446C-4D9D-944A-5ACB0420A82A} = {8055F346-446C-4D9D-944A-5ACB0420A82A}
 	EndProjectSection
