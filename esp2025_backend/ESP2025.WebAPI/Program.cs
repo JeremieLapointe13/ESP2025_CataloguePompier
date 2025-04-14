@@ -93,6 +93,12 @@ public class Program
         app.UseAuthentication();
         app.UseAuthorization();
 
+        app.MapGet("/", () =>
+        {
+            var timestamp = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+            return $"API is working! Timestamp: {timestamp}";
+        });
+
         app.MapControllers();
 
         app.Run();
