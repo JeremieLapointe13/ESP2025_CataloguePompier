@@ -20,7 +20,6 @@ public static class DependencyInjection
         services.AddScoped<IModifyStatusUserUseCase, ModifyStatusUserUseCase>();
 
         services.AddScoped<IAuthService, AuthService>();
-        services.AddScoped<IRegisterUseCase, RegisterUseCase>();
         services.AddScoped<ILoginUseCase, LoginUseCase>();
 
         return services;

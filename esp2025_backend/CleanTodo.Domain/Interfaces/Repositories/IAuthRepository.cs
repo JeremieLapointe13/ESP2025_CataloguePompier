@@ -8,6 +8,4 @@ public interface IAuthRepository
     Task<User?> FindByEmail(string email);
     Task IncrementLoginAttempts(int userId);
     Task ResetLoginAttempts(int userId);
-    Task<bool> EmailExists(string email);
-    Task<User> Register(User user);
 }

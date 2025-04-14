@@ -10,27 +10,10 @@ namespace ESP2025.API.Controllers;
 public class AuthController : ControllerBase
 {
     private readonly ILoginUseCase _loginUseCase;
-    private readonly IRegisterUseCase _registerUseCase;
 
-    public AuthController(ILoginUseCase loginUseCase, IRegisterUseCase registerUseCase)
+    public AuthController(ILoginUseCase loginUseCase)
     {
         _loginUseCase = loginUseCase;
-        _registerUseCase = registerUseCase;
-    }
-
-    [HttpPost("register")]
-    [AllowAnonymous]
-    public async Task<ActionResult<AuthResponseDto>> Register([FromBody] RegisterRequestDto registerRequest)
-    {
-        try
-        {
-            var response = await _registerUseCase.Execute(registerRequest);
-            return Ok(response);
-        }
-        catch (Exception ex)
-        {
-            return BadRequest(new { message = ex.Message });
-        }
     }
 
     [HttpPost("login")]

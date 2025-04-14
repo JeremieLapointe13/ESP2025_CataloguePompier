@@ -3,6 +3,7 @@ using ESP2025.Application;
 using ESP2025.Infrastructure;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using System.Text;
 
 public class Program
@@ -14,7 +15,7 @@ public class Program
         // Add services to the container.
         builder.Services.AddControllers();
 
-        // Add JWT Authentication
+        // JWT Authentication
         builder.Services.AddAuthentication(options =>
         {
             options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -34,6 +35,32 @@ public class Program
                     Encoding.UTF8.GetBytes(builder.Configuration["JwtSettings:SecretKey"]!)
                 )
             };
+        });
+
+        // Pour le token JWT
+        builder.Services.AddSwaggerGen(c =>
+        {
+            c.SwaggerDoc("v1", new OpenApiInfo { Title = "ESP2025 API", Version = "v1" });
+
+            c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+            {
+                Description = "Format: Bearer [token]",
+                Name = "Authorization",
+                In = ParameterLocation.Header,
+                Type = SecuritySchemeType.ApiKey,
+                Scheme = "Bearer"
+            });
+
+            c.AddSecurityRequirement(new OpenApiSecurityRequirement
+            {
+                {
+                    new OpenApiSecurityScheme
+                    {
+                        Reference = new OpenApiReference { Type = ReferenceType.SecurityScheme, Id = "Bearer" }
+                    },
+                    Array.Empty<string>()
+                }
+            });
         });
 
         // Add Application Layer
@@ -57,7 +84,6 @@ public class Program
 
         app.UseHttpsRedirection();
 
-        // Ajoutez ces lignes pour activer l'authentification
         app.UseAuthentication();
         app.UseAuthorization();
 

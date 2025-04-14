@@ -2,10 +2,12 @@ using ESP2025.Application.DTOS;
 using ESP2025.Application.Exceptions;
 using ESP2025.Application.UseCase;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ESP2025.API.Controllers;
 
 [ApiController]
+[Authorize]
 [Route("api/[controller]")]
 public class UsersController : ControllerBase
 {
