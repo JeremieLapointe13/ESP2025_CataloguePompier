@@ -1,21 +1,66 @@
-import React, { useState } from "react";
-import {
-  mockProducts,
-  mockSizes,
-  type Product,
-  type Size,
-} from "../../mocks/mock";
+import React, { useState, useEffect } from "react";
+import { mockSizes, type Size } from "../../mocks/mock";
 import AddProductModal from "../modals/AddProductAdminModal";
 import ModifyProductModal from "../modals/ModifyProductAdminModal";
+import {
+  getAllProducts,
+  deleteProduct,
+  Product,
+} from "../../services/adminProducts";
 
 const AdminProduct: React.FC = () => {
   const [addProductModalOpen, setAddProductModalOpen] = useState(false);
   const [modifyProductModalOpen, setModifyProductModalOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+  const [products, setProducts] = useState<Product[]>([]);
+  const [error, setError] = useState<string>("");
+
+  useEffect(() => {
+    fetchProducts();
+  }, []);
+
+  const fetchProducts = async () => {
+    try {
+      const data = await getAllProducts();
+      setProducts(data);
+      setError("");
+    } catch (err) {
+      setError("Erreur lors de la récupération des produits");
+      console.error("Erreur dans fetchProducts:", err);
+    }
+  };
 
   const handleModify = (product: Product) => {
     setSelectedProduct(product);
     setModifyProductModalOpen(true);
+  };
+
+  const handleDelete = async (productId: number) => {
+    if (window.confirm("Êtes-vous sûr de vouloir supprimer ce produit ?")) {
+      try {
+        await deleteProduct(productId);
+        fetchProducts();
+      } catch (err) {
+        setError("Erreur lors de la suppression du produit");
+        console.error("Erreur dans handleDelete:", err);
+      }
+    }
+  };
+
+  const handleAddProduct = (newProduct: Product) => {
+    setProducts([...products, newProduct]);
+    setAddProductModalOpen(false);
+  };
+
+  const handleUpdateProduct = (updatedProduct: Product) => {
+    setProducts(
+      products.map((product) =>
+        product.idProduct === updatedProduct.idProduct
+          ? updatedProduct
+          : product
+      )
+    );
+    setModifyProductModalOpen(false);
   };
 
   return (
@@ -32,6 +77,12 @@ const AdminProduct: React.FC = () => {
           </button>
         </div>
 
+        {error && (
+          <div className="p-4 text-red-700 bg-red-100 border border-red-200">
+            {error}
+          </div>
+        )}
+
         {/* Tableau */}
         <table className="w-full">
           <thead className="bg-gray-100">
@@ -45,15 +96,14 @@ const AdminProduct: React.FC = () => {
             </tr>
           </thead>
           <tbody>
-            {mockProducts.map((product: Product) => (
+            {products.map((product: Product) => (
               <tr key={product.idProduct} className="border-b hover:bg-gray-50">
                 <td className="px-6 py-4">{product.name}</td>
                 <td className="px-6 py-4">{product.points}</td>
                 <td className="px-6 py-4">
-                  {
+                  {product.sizeStatus ||
                     mockSizes.find((s: Size) => s.idSize === product.sizeId)
-                      ?.status
-                  }
+                      ?.status}
                 </td>
                 <td className="px-6 py-4">{product.quantity}</td>
                 <td className="px-6 py-4">
@@ -66,7 +116,10 @@ const AdminProduct: React.FC = () => {
                   >
                     Modifier
                   </button>
-                  <button className="bg-red-800 hover:bg-gray-800 text-white px-3 py-1 rounded">
+                  <button
+                    className="bg-red-800 hover:bg-gray-800 text-white px-3 py-1 rounded"
+                    onClick={() => handleDelete(product.idProduct)}
+                  >
                     Supprimer
                   </button>
                 </td>
@@ -78,14 +131,14 @@ const AdminProduct: React.FC = () => {
       {addProductModalOpen && (
         <AddProductModal
           onClose={() => setAddProductModalOpen(false)}
-          onSubmit={() => {}}
+          onSubmit={handleAddProduct}
         />
       )}
-      {modifyProductModalOpen && (
+      {modifyProductModalOpen && selectedProduct && (
         <ModifyProductModal
           onClose={() => setModifyProductModalOpen(false)}
-          onSubmit={() => {}}
-          product={selectedProduct as Product}
+          onSubmit={handleUpdateProduct}
+          product={selectedProduct}
         />
       )}
     </div>

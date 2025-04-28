@@ -1,15 +1,80 @@
-import React from "react";
+import React, { useState } from "react";
 import { mockGrades } from "../../mocks/mock";
+import { createUser, User, CreateUserDto } from "../../services/adminUsers";
 
 interface AddUserAdminModalProps {
   onClose: () => void;
-  onSubmit: () => void;
+  onSubmit: (user: User) => void;
 }
 
 const AddUserAdminModal: React.FC<AddUserAdminModalProps> = ({
   onClose,
   onSubmit,
 }) => {
+  const [formData, setFormData] = useState<CreateUserDto>({
+    gradeId: mockGrades[0].idGrade,
+    email: "",
+    ville: "",
+    province: "",
+    pays: "",
+    noMatricule: 0,
+    firstName: "",
+    lastName: "",
+    points: 0,
+    isAdmin: false,
+    isActive: true,
+    password: "",
+  });
+
+  const [error, setError] = useState<string>("");
+
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
+    const { name, value, type } = e.target;
+
+    if (type === "checkbox") {
+      const checkbox = e.target as HTMLInputElement;
+      setFormData({
+        ...formData,
+        [name]: checkbox.checked,
+      });
+    } else if (name === "gradeId") {
+      setFormData({
+        ...formData,
+        gradeId: value ? parseInt(value) : null,
+      });
+    } else if (
+      type === "number" ||
+      name === "noMatricule" ||
+      name === "points"
+    ) {
+      setFormData({
+        ...formData,
+        [name]: parseInt(value) || 0,
+      });
+    } else {
+      setFormData({
+        ...formData,
+        [name]: value,
+      });
+    }
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError("");
+
+    try {
+      const newUser = await createUser(formData);
+      onSubmit(newUser);
+      onClose();
+    } catch (err: any) {
+      console.error("Erreur:", err);
+      setError(err.message || "Erreur lors de l'ajout de l'utilisateur");
+    }
+  };
+
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4">
       <div className="bg-white rounded-lg p-6 max-w-md w-full">
@@ -23,68 +88,126 @@ const AddUserAdminModal: React.FC<AddUserAdminModalProps> = ({
           </button>
         </div>
 
-        <form
-          onSubmit={(e) => {
-            e.preventDefault();
-            onSubmit();
-            onClose();
-          }}
-          className="space-y-4"
-        >
+        {error && (
+          <div className="mb-4 p-2 bg-red-100 text-red-700 rounded">
+            {error}
+          </div>
+        )}
+
+        <form onSubmit={handleSubmit} className="space-y-4">
           <input
             type="text"
+            name="firstName"
             placeholder="Prénom"
             className="w-full p-2 border rounded"
+            value={formData.firstName}
+            onChange={handleChange}
+            required
           />
+
           <input
             type="text"
+            name="lastName"
             placeholder="Nom"
             className="w-full p-2 border rounded"
+            value={formData.lastName}
+            onChange={handleChange}
+            required
           />
-          <select className="w-full p-2 border rounded">
+
+          <select
+            name="gradeId"
+            className="w-full p-2 border rounded"
+            value={formData.gradeId || ""}
+            onChange={handleChange}
+            required
+          >
             {mockGrades.map((grade) => (
               <option key={grade.idGrade} value={grade.idGrade}>
                 {grade.nomGrade}
               </option>
             ))}
           </select>
+
           <input
             type="email"
+            name="email"
             placeholder="Email"
             className="w-full p-2 border rounded"
+            value={formData.email}
+            onChange={handleChange}
+            required
           />
+
           <input
             type="text"
+            name="ville"
             placeholder="Ville"
             className="w-full p-2 border rounded"
+            value={formData.ville}
+            onChange={handleChange}
+            required
           />
+
           <input
             type="text"
+            name="province"
             placeholder="Province"
             className="w-full p-2 border rounded"
+            value={formData.province}
+            onChange={handleChange}
+            required
           />
+
           <input
             type="text"
+            name="pays"
             placeholder="Pays"
             className="w-full p-2 border rounded"
+            value={formData.pays}
+            onChange={handleChange}
+            required
           />
+
           <input
             type="number"
+            name="noMatricule"
             placeholder="No. Matricule"
             className="w-full p-2 border rounded"
+            value={formData.noMatricule || ""}
+            onChange={handleChange}
+            required
           />
+
           <input
             type="password"
+            name="password"
             placeholder="Mot de passe"
             className="w-full p-2 border rounded"
+            value={formData.password}
+            onChange={handleChange}
+            required
           />
+
           <div className="flex items-center space-x-4">
             <label className="flex items-center">
-              <input type="checkbox" className="mr-2" />
+              <input
+                type="checkbox"
+                name="isAdmin"
+                className="mr-2"
+                checked={formData.isAdmin}
+                onChange={handleChange}
+              />
               Administrateur
             </label>
             <label className="flex items-center">
-              <input type="checkbox" className="mr-2" />
+              <input
+                type="checkbox"
+                name="isActive"
+                className="mr-2"
+                checked={formData.isActive}
+                onChange={handleChange}
+              />
               Actif
             </label>
           </div>

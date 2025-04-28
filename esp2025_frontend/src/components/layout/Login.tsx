@@ -4,15 +4,26 @@ import { useNavigate } from "react-router-dom";
 import logoRiviereDuLoup from "../../assets/riviere-du-loup-logo.png";
 // @ts-ignore
 import logoServiceIncendie from "../../assets/serviceIncendie.png";
+import { login } from "../../services/auth";
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+  const [error, setError] = useState<string>("");
+
   const navigate = useNavigate();
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>): void => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
-    navigate("/catalogue");
+    setError("");
+
+    try {
+      await login({ email, password });
+      navigate("/catalogue");
+    } catch (err: any) {
+      setError("Email ou mot de passe incorrect");
+      console.error("Erreur de connexion:", err);
+    }
   };
 
   return (
@@ -34,6 +45,12 @@ const Login: React.FC = () => {
             />
           </div>
         </div>
+
+        {error && (
+          <div className="mb-4 p-3 bg-red-100 text-red-700 rounded-md text-center">
+            {error}
+          </div>
+        )}
 
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
@@ -79,7 +96,7 @@ const Login: React.FC = () => {
               type="submit"
               className="w-full bg-gray-800 text-white py-2 px-4 rounded-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
             >
-              Se Connecter
+              Se connecter
             </button>
           </div>
         </form>

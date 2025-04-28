@@ -15,14 +15,16 @@ public class UsersController : ControllerBase
     private readonly ICreateUserUseCase _createUserUseCase;
     private readonly IDeleteUserUseCase _deleteUserUseCase;
     private readonly IModifyStatusUserUseCase _modifyStatusUserUseCase;
+    private readonly IUpdateUserUseCase _updateUserUseCase;
 
-    public UsersController(IGetAllUsersUseCase getAllUsersUseCase, IGetUserByIdUseCase getUserByIdUseCase, ICreateUserUseCase createUserUseCase, IDeleteUserUseCase deleteUserUseCase, IModifyStatusUserUseCase modifyStatusUserUseCase)
+    public UsersController(IGetAllUsersUseCase getAllUsersUseCase, IGetUserByIdUseCase getUserByIdUseCase, ICreateUserUseCase createUserUseCase, IDeleteUserUseCase deleteUserUseCase, IModifyStatusUserUseCase modifyStatusUserUseCase, IUpdateUserUseCase updateUserUseCase)
     {
         _getAllUsersUseCase = getAllUsersUseCase;
         _getUserByIdUseCase = getUserByIdUseCase;
         _createUserUseCase = createUserUseCase;
         _deleteUserUseCase = deleteUserUseCase;
         _modifyStatusUserUseCase = modifyStatusUserUseCase;
+        _updateUserUseCase = updateUserUseCase;
     }
 
 
@@ -77,6 +79,29 @@ public class UsersController : ControllerBase
         catch (NotFoundException)
         {
             return NotFound();
+        }
+    }
+    [HttpPut("{idUser}")]
+    [Authorize(Roles = "Admin")]
+    public async Task<ActionResult<UserDto>> UpdateUser(int idUser, [FromBody] UpdateUserDto updateUserDto)
+    {
+        if (idUser != updateUserDto.IdUser)
+        {
+            return BadRequest("ID mismatch");
+        }
+
+        try
+        {
+            var user = await _updateUserUseCase.Execute(updateUserDto);
+            return Ok(user);
+        }
+        catch (NotFoundException)
+        {
+            return NotFound();
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new { message = ex.Message });
         }
     }
 }

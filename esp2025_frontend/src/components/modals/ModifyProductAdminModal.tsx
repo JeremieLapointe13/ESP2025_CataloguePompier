@@ -1,14 +1,10 @@
-import React from "react";
-import {
-  mockSizes,
-  mockFabricTypes,
-  mockCategories,
-  type Product,
-} from "../../mocks/mock";
+import React, { useState, useEffect } from "react";
+import { mockSizes, mockFabricTypes, mockCategories } from "../../mocks/mock";
+import { updateProduct, Product } from "../../services/adminProducts";
 
 interface ModifyProductModalProps {
   onClose: () => void;
-  onSubmit: () => void;
+  onSubmit: (product: Product) => void;
   product: Product;
 }
 
@@ -17,6 +13,60 @@ const ModifyProductModal: React.FC<ModifyProductModalProps> = ({
   onSubmit,
   product,
 }) => {
+  const [formData, setFormData] = useState<Product>({ ...product });
+  const [error, setError] = useState<string>("");
+
+  useEffect(() => {
+    setFormData({ ...product });
+  }, [product]);
+
+  const handleChange = (
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
+    >
+  ) => {
+    const { name, value, type } = e.target;
+
+    if (type === "checkbox") {
+      const checkbox = e.target as HTMLInputElement;
+      setFormData({
+        ...formData,
+        [name]: checkbox.checked,
+      });
+    } else if (name === "fabricTypeId" && value === "") {
+      setFormData({
+        ...formData,
+        fabricTypeId: null,
+      });
+    } else {
+      setFormData({
+        ...formData,
+        [name]:
+          type === "number" ||
+          name === "points" ||
+          name === "categoryId" ||
+          name === "sizeId" ||
+          name === "quantity"
+            ? parseInt(value) || 0
+            : value,
+      });
+    }
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError("");
+
+    try {
+      const updatedProduct = await updateProduct(formData.idProduct, formData);
+      onSubmit(updatedProduct);
+      onClose();
+    } catch (err: any) {
+      console.error("Erreur:", err);
+      setError(err.message || "Erreur lors de la modification du produit");
+    }
+  };
+
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4">
       <div className="bg-white rounded-lg p-6 max-w-md w-full">
@@ -30,31 +80,39 @@ const ModifyProductModal: React.FC<ModifyProductModalProps> = ({
           </button>
         </div>
 
-        <form
-          onSubmit={(e) => {
-            e.preventDefault();
-            onSubmit();
-            onClose();
-          }}
-          className="space-y-4"
-        >
+        {error && (
+          <div className="mb-4 p-2 bg-red-100 text-red-700 rounded">
+            {error}
+          </div>
+        )}
+
+        <form onSubmit={handleSubmit} className="space-y-4">
           <input
             type="text"
+            name="name"
             placeholder="Nom du produit"
-            defaultValue={product.name}
+            value={formData.name}
+            onChange={handleChange}
             className="w-full p-2 border rounded"
+            required
           />
 
           <input
             type="number"
+            name="points"
             placeholder="Points"
-            defaultValue={product.points}
+            value={formData.points}
+            onChange={handleChange}
             className="w-full p-2 border rounded"
+            required
           />
 
           <select
+            name="categoryId"
             className="w-full p-2 border rounded"
-            defaultValue={product.categoryId}
+            value={formData.categoryId}
+            onChange={handleChange}
+            required
           >
             <option value="">Sélectionner une catégorie</option>
             {mockCategories
@@ -72,8 +130,11 @@ const ModifyProductModal: React.FC<ModifyProductModalProps> = ({
           </select>
 
           <select
+            name="sizeId"
             className="w-full p-2 border rounded"
-            defaultValue={product.sizeId}
+            value={formData.sizeId}
+            onChange={handleChange}
+            required
           >
             <option value="">Sélectionner une taille</option>
             {mockSizes.map((size) => (
@@ -84,8 +145,10 @@ const ModifyProductModal: React.FC<ModifyProductModalProps> = ({
           </select>
 
           <select
+            name="fabricTypeId"
             className="w-full p-2 border rounded"
-            defaultValue={product.fabricTypeId}
+            value={formData.fabricTypeId || ""}
+            onChange={handleChange}
           >
             <option value="">Sélectionner un type de tissu</option>
             {mockFabricTypes.map((fabricType) => (
@@ -100,44 +163,49 @@ const ModifyProductModal: React.FC<ModifyProductModalProps> = ({
 
           <input
             type="text"
+            name="productNo"
             placeholder="Numéro de produit"
-            defaultValue={product.productNo}
+            value={formData.productNo}
+            onChange={handleChange}
             className="w-full p-2 border rounded"
+            required
           />
 
           <textarea
+            name="description"
             placeholder="Description"
-            defaultValue={product.description}
+            value={formData.description || ""}
+            onChange={handleChange}
             className="w-full p-2 border rounded h-24"
           ></textarea>
 
           <input
             type="text"
+            name="imageURL"
             placeholder="URL de l'image (optionnel)"
-            defaultValue={product.imageURL || ""}
-            className="w-full p-2 border rounded"
-          />
-
-          <input
-            type="text"
-            placeholder="Fournisseur"
-            defaultValue={product.supplier}
+            value={formData.imageURL || ""}
+            onChange={handleChange}
             className="w-full p-2 border rounded"
           />
 
           <input
             type="number"
+            name="quantity"
             placeholder="Quantité"
-            defaultValue={product.quantity}
+            value={formData.quantity}
+            onChange={handleChange}
             className="w-full p-2 border rounded"
+            required
           />
 
           <div className="flex items-center">
             <label className="flex items-center">
               <input
                 type="checkbox"
+                name="isActive"
                 className="mr-2"
-                defaultChecked={product.isActive}
+                checked={formData.isActive}
+                onChange={handleChange}
               />
               Actif
             </label>

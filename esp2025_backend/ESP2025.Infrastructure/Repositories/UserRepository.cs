@@ -61,4 +61,17 @@ public class UserRepository : IUserRepository
             .Include(u => u.Grade)
             .FirstOrDefaultAsync(u => u.Email == email);
     }
+    public async Task<User?> Update(User user)
+    {
+        var existingUser = await _context.User.FindAsync(user.IdUser);
+        if (existingUser == null)
+            return null;
+
+        user.Password = existingUser.Password;
+        user.LoginAttempts = existingUser.LoginAttempts;
+
+        _context.Entry(existingUser).CurrentValues.SetValues(user);
+        await _context.SaveChangesAsync();
+        return existingUser;
+    }
 }

@@ -11,4 +11,5 @@ public interface IUserRepository
     Task Delete(int idUser);
     Task<User?> UpdateStatus(int idUser, bool isActive);
     Task<User?> FindByEmail(string email);
+    Task<User?> Update(User user);
 }

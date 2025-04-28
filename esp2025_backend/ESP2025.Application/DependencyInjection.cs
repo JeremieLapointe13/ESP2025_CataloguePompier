@@ -21,6 +21,7 @@ public static class DependencyInjection
         services.AddScoped<ICreateUserUseCase, CreateUserUseCase>();
         services.AddScoped<IDeleteUserUseCase, DeleteUserUseCase>();
         services.AddScoped<IModifyStatusUserUseCase, ModifyStatusUserUseCase>();
+        services.AddScoped<IUpdateUserUseCase, UpdateUserUseCase>();
 
         services.AddScoped<IAuthService, AuthService>();
         services.AddScoped<ILoginUseCase, LoginUseCase>();

@@ -76,7 +76,10 @@ public class Program
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
 
+
         var app = builder.Build();
+
+        app.UseCors(builder => builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
 
         // Configure the HTTP request pipeline.
         if (app.Environment.IsDevelopment())
@@ -89,6 +92,7 @@ public class Program
         {
             ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
         });
+
 
         app.UseAuthentication();
         app.UseAuthorization();

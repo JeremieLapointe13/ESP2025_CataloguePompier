@@ -1,15 +1,83 @@
-import React from "react";
+import React, { useState } from "react";
 import { mockSizes, mockFabricTypes, mockCategories } from "../../mocks/mock";
+import {
+  createProduct,
+  Product,
+  CreateProductDto,
+} from "../../services/adminProducts";
 
 interface AddProductAdminModalProps {
   onClose: () => void;
-  onSubmit: () => void;
+  onSubmit: (product: Product) => void;
 }
 
 const AddProductAdminModal: React.FC<AddProductAdminModalProps> = ({
   onClose,
   onSubmit,
 }) => {
+  const [formData, setFormData] = useState<CreateProductDto>({
+    name: "",
+    points: 0,
+    categoryId: 0,
+    sizeId: 0,
+    fabricTypeId: null,
+    productNo: "",
+    description: "",
+    imageURL: "",
+    supplierId: 1,
+    quantity: 0,
+    isActive: true,
+  });
+
+  const [error, setError] = useState<string>("");
+
+  const handleChange = (
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
+    >
+  ) => {
+    const { name, value, type } = e.target;
+
+    if (type === "checkbox") {
+      const checkbox = e.target as HTMLInputElement;
+      setFormData({
+        ...formData,
+        [name]: checkbox.checked,
+      });
+    } else if (name === "fabricTypeId" && value === "") {
+      setFormData({
+        ...formData,
+        fabricTypeId: null,
+      });
+    } else {
+      setFormData({
+        ...formData,
+        [name]:
+          type === "number" ||
+          name === "points" ||
+          name === "categoryId" ||
+          name === "sizeId" ||
+          name === "quantity"
+            ? parseInt(value) || 0
+            : value,
+      });
+    }
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError("");
+
+    try {
+      const newProduct = await createProduct(formData);
+      onSubmit(newProduct);
+      onClose();
+    } catch (err: any) {
+      console.error("Erreur:", err);
+      setError(err.message || "Erreur lors de l'ajout du produit");
+    }
+  };
+
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4">
       <div className="bg-white rounded-lg p-6 max-w-md w-full">
@@ -23,27 +91,40 @@ const AddProductAdminModal: React.FC<AddProductAdminModalProps> = ({
           </button>
         </div>
 
-        <form
-          onSubmit={(e) => {
-            e.preventDefault();
-            onSubmit();
-            onClose();
-          }}
-          className="space-y-4"
-        >
+        {error && (
+          <div className="mb-4 p-2 bg-red-100 text-red-700 rounded">
+            {error}
+          </div>
+        )}
+
+        <form onSubmit={handleSubmit} className="space-y-4">
           <input
             type="text"
+            name="name"
             placeholder="Nom du produit"
             className="w-full p-2 border rounded"
+            value={formData.name}
+            onChange={handleChange}
+            required
           />
 
           <input
             type="number"
+            name="points"
             placeholder="Points"
             className="w-full p-2 border rounded"
+            value={formData.points}
+            onChange={handleChange}
+            required
           />
 
-          <select className="w-full p-2 border rounded">
+          <select
+            name="categoryId"
+            className="w-full p-2 border rounded"
+            value={formData.categoryId}
+            onChange={handleChange}
+            required
+          >
             <option value="">Sélectionner une catégorie</option>
             {mockCategories
               .flatMap(
@@ -59,7 +140,13 @@ const AddProductAdminModal: React.FC<AddProductAdminModalProps> = ({
               ))}
           </select>
 
-          <select className="w-full p-2 border rounded">
+          <select
+            name="sizeId"
+            className="w-full p-2 border rounded"
+            value={formData.sizeId}
+            onChange={handleChange}
+            required
+          >
             <option value="">Sélectionner une taille</option>
             {mockSizes.map((size) => (
               <option key={size.idSize} value={size.idSize}>
@@ -68,7 +155,12 @@ const AddProductAdminModal: React.FC<AddProductAdminModalProps> = ({
             ))}
           </select>
 
-          <select className="w-full p-2 border rounded">
+          <select
+            name="fabricTypeId"
+            className="w-full p-2 border rounded"
+            value={formData.fabricTypeId || ""}
+            onChange={handleChange}
+          >
             <option value="">Sélectionner un type de tissu</option>
             {mockFabricTypes.map((fabricType) => (
               <option
@@ -82,36 +174,50 @@ const AddProductAdminModal: React.FC<AddProductAdminModalProps> = ({
 
           <input
             type="text"
+            name="productNo"
             placeholder="Numéro de produit"
             className="w-full p-2 border rounded"
+            value={formData.productNo}
+            onChange={handleChange}
+            required
           />
 
           <textarea
+            name="description"
             placeholder="Description"
             className="w-full p-2 border rounded h-24"
+            value={formData.description || ""}
+            onChange={handleChange}
           ></textarea>
 
           <input
             type="text"
+            name="imageURL"
             placeholder="URL de l'image (optionnel)"
             className="w-full p-2 border rounded"
-          />
-
-          <input
-            type="text"
-            placeholder="Fournisseur"
-            className="w-full p-2 border rounded"
+            value={formData.imageURL || ""}
+            onChange={handleChange}
           />
 
           <input
             type="number"
+            name="quantity"
             placeholder="Quantité"
             className="w-full p-2 border rounded"
+            value={formData.quantity}
+            onChange={handleChange}
+            required
           />
 
           <div className="flex items-center">
             <label className="flex items-center">
-              <input type="checkbox" className="mr-2" defaultChecked={true} />
+              <input
+                type="checkbox"
+                name="isActive"
+                className="mr-2"
+                checked={formData.isActive}
+                onChange={handleChange}
+              />
               Actif
             </label>
           </div>
