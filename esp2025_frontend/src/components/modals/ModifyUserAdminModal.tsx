@@ -1,4 +1,4 @@
-import React, { useState, useEffect, use } from "react";
+import React, { useState, useEffect } from "react";
 import { updateUser, User, UpdateUserDto } from "../../services/adminUsers";
 import { getAllGrades, Grade } from "../../services/referenceData";
 
@@ -17,9 +17,38 @@ const ModifyUserAdminModal: React.FC<ModifyUserAdminModalProps> = ({
   const [error, setError] = useState<string>("");
   const [grades, setGrades] = useState<Grade[]>([]);
 
-  useEffect(() => {
-    setFormData({ ...user });
-  }, [user]);
+  const validateForm = (): string | null => {
+    if (!formData.firstName.trim()) return "Le prénom est requis.";
+    if (formData.firstName.length > 50)
+      return "Le prénom ne doit pas dépasser 50 caractères.";
+
+    if (!formData.lastName.trim()) return "Le nom est requis.";
+    if (formData.lastName.length > 50)
+      return "Le nom ne doit pas dépasser 50 caractères.";
+
+    if (!formData.email.trim()) return "L'email est requis.";
+    if (formData.email.length > 100)
+      return "L'email ne doit pas dépasser 100 caractères.";
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(formData.email)) return "Format d'email invalide.";
+
+    if (!formData.ville.trim()) return "La ville est requise.";
+    if (formData.ville.length > 100)
+      return "La ville ne doit pas dépasser 100 caractères.";
+
+    if (!formData.province.trim()) return "La province est requise.";
+    if (formData.province.length > 100)
+      return "La province ne doit pas dépasser 100 caractères.";
+
+    if (!formData.pays.trim()) return "Le pays est requis.";
+    if (formData.pays.length > 100)
+      return "Le pays ne doit pas dépasser 100 caractères.";
+
+    if (!formData.noMatricule || formData.noMatricule <= 0)
+      return "Le numéro de matricule doit être un nombre positif.";
+
+    return null; // Tout est bon
+  };
 
   useEffect(() => {
     const fetchGrades = async () => {
@@ -72,8 +101,13 @@ const ModifyUserAdminModal: React.FC<ModifyUserAdminModalProps> = ({
     e.preventDefault();
     setError("");
 
+    const validationError = validateForm();
+    if (validationError) {
+      setError(validationError);
+      return;
+    }
+
     try {
-      // Utiliser la nouvelle fonction updateUser
       const updateData: UpdateUserDto = {
         idUser: formData.idUser,
         gradeId: formData.gradeId,
@@ -95,7 +129,9 @@ const ModifyUserAdminModal: React.FC<ModifyUserAdminModalProps> = ({
     } catch (err: any) {
       console.error("Erreur:", err);
       setError(
-        err.message || "Erreur lors de la modification de l'utilisateur"
+        err?.response?.data?.message ||
+          err.message ||
+          "Erreur lors de la modification de l'utilisateur"
       );
     }
   };

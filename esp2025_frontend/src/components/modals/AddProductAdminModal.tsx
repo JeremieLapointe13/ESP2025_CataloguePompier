@@ -41,6 +41,39 @@ const AddProductAdminModal: React.FC<AddProductAdminModalProps> = ({
   const [fabricTypes, setFabricTypes] = useState<FabricType[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
 
+  const validateForm = (): string | null => {
+    if (!formData.name.trim()) return "Le nom du produit est requis.";
+    if (formData.name.length > 100)
+      return "Le nom du produit ne doit pas dépasser 100 caractères.";
+
+    if (!formData.productNo.trim()) return "Le numéro de produit est requis.";
+    if (formData.productNo.length > 50)
+      return "Le numéro de produit ne doit pas dépasser 50 caractères.";
+
+    if (formData.points < 0)
+      return "Les points doivent être un nombre positif ou nul.";
+
+    if (!formData.categoryId || formData.categoryId <= 0)
+      return "La catégorie est requise.";
+
+    if (!formData.sizeId || formData.sizeId <= 0)
+      return "La taille est requise.";
+
+    if (formData.fabricTypeId !== null && formData.fabricTypeId <= 0)
+      return "Le type de tissu est invalide.";
+
+    if (formData.description && formData.description.length > 1000)
+      return "La description ne doit pas dépasser 1000 caractères.";
+
+    if (formData.imageURL && formData.imageURL.length > 500)
+      return "L'URL de l'image ne doit pas dépasser 500 caractères.";
+
+    if (formData.quantity < 0)
+      return "La quantité doit être un nombre positif ou nul.";
+
+    return null; // Tout est valide
+  };
+
   useEffect(() => {
     const fetchSizes = async () => {
       try {
@@ -113,6 +146,12 @@ const AddProductAdminModal: React.FC<AddProductAdminModalProps> = ({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
+
+    const validationError = validateForm();
+    if (validationError) {
+      setError(validationError);
+      return;
+    }
 
     try {
       const newProduct = await createProduct(formData);
