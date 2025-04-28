@@ -8,6 +8,7 @@ using System.Reflection;
 using ESP2025.Application.Service.Product;
 using ESP2025.Application.UseCases.Product.Interfaces;
 using ESP2025.Application.UseCases;
+using ESP2025.Application.UseCases.Reference;
 
 namespace ESP2025.Application;
 public static class DependencyInjection
@@ -32,6 +33,11 @@ public static class DependencyInjection
         services.AddScoped<ICreateProductUseCase, CreateProductUseCase>();
         services.AddScoped<IUpdateProductUseCase, UpdateProductUseCase>();
         services.AddScoped<IDeleteProductUseCase, DeleteProductUseCase>();
+
+        services.AddScoped<IGetAllSizesUseCase, GetAllSizesUseCase>();
+        services.AddScoped<IGetAllFabricTypesUseCase, GetAllFabricTypesUseCase>();
+        services.AddScoped<IGetAllCategoriesUseCase, GetAllCategoriesUseCase>();
+        services.AddScoped<IGetAllGradesUseCase, GetAllGradesUseCase>();
 
         return services;
     }

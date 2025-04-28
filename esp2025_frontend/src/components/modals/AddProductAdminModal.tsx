@@ -1,10 +1,17 @@
-import React, { useState } from "react";
-import { mockSizes, mockFabricTypes, mockCategories } from "../../mocks/mock";
+import React, { useState, useEffect } from "react";
 import {
   createProduct,
   Product,
   CreateProductDto,
 } from "../../services/adminProducts";
+import {
+  getAllSizes,
+  Size,
+  getAllFabricTypes,
+  FabricType,
+  getAllCategories,
+  Category,
+} from "../../services/referenceData";
 
 interface AddProductAdminModalProps {
   onClose: () => void;
@@ -30,6 +37,45 @@ const AddProductAdminModal: React.FC<AddProductAdminModalProps> = ({
   });
 
   const [error, setError] = useState<string>("");
+  const [sizes, setSizes] = useState<Size[]>([]);
+  const [fabricTypes, setFabricTypes] = useState<FabricType[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
+
+  useEffect(() => {
+    const fetchSizes = async () => {
+      try {
+        const sizesData = await getAllSizes();
+        setSizes(sizesData);
+      } catch (err) {
+        console.error("Erreur lors du chargement des tailles:", err);
+        setError("Impossible de charger les tailles");
+      }
+    };
+
+    const fetchFabricTypes = async () => {
+      try {
+        const fabricTypesData = await getAllFabricTypes();
+        setFabricTypes(fabricTypesData);
+      } catch (err) {
+        console.error("Erreur lors du chargement des types de tissu:", err);
+        setError("Impossible de charger les types de tissu");
+      }
+    };
+
+    const fetchCategories = async () => {
+      try {
+        const categoriesData = await getAllCategories();
+        setCategories(categoriesData);
+      } catch (err) {
+        console.error("Erreur lors du chargement des catégories:", err);
+        setError("Impossible de charger les catégories");
+      }
+    };
+
+    fetchSizes();
+    fetchFabricTypes();
+    fetchCategories();
+  }, []);
 
   const handleChange = (
     e: React.ChangeEvent<
@@ -126,18 +172,11 @@ const AddProductAdminModal: React.FC<AddProductAdminModalProps> = ({
             required
           >
             <option value="">Sélectionner une catégorie</option>
-            {mockCategories
-              .flatMap(
-                (category) =>
-                  category.subcategories?.flatMap((subcat) =>
-                    subcat.subcategories ? subcat.subcategories : [subcat]
-                  ) || []
-              )
-              .map((cat) => (
-                <option key={cat.idCategory} value={cat.idCategory}>
-                  {cat.name}
-                </option>
-              ))}
+            {categories.map((cat) => (
+              <option key={cat.idCategory} value={cat.idCategory}>
+                {cat.name}
+              </option>
+            ))}
           </select>
 
           <select
@@ -148,7 +187,7 @@ const AddProductAdminModal: React.FC<AddProductAdminModalProps> = ({
             required
           >
             <option value="">Sélectionner une taille</option>
-            {mockSizes.map((size) => (
+            {sizes.map((size) => (
               <option key={size.idSize} value={size.idSize}>
                 {size.status}
               </option>
@@ -162,7 +201,7 @@ const AddProductAdminModal: React.FC<AddProductAdminModalProps> = ({
             onChange={handleChange}
           >
             <option value="">Sélectionner un type de tissu</option>
-            {mockFabricTypes.map((fabricType) => (
+            {fabricTypes.map((fabricType) => (
               <option
                 key={fabricType.idFabricType}
                 value={fabricType.idFabricType}

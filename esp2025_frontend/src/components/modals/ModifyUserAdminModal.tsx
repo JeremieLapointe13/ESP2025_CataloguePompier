@@ -1,7 +1,6 @@
-// src/components/modals/ModifyUserAdminModal.tsx
-import React, { useState, useEffect } from "react";
-import { mockGrades } from "../../mocks/mock";
+import React, { useState, useEffect, use } from "react";
 import { updateUser, User, UpdateUserDto } from "../../services/adminUsers";
+import { getAllGrades, Grade } from "../../services/referenceData";
 
 interface ModifyUserAdminModalProps {
   onClose: () => void;
@@ -16,10 +15,25 @@ const ModifyUserAdminModal: React.FC<ModifyUserAdminModalProps> = ({
 }) => {
   const [formData, setFormData] = useState<User>({ ...user });
   const [error, setError] = useState<string>("");
+  const [grades, setGrades] = useState<Grade[]>([]);
 
   useEffect(() => {
     setFormData({ ...user });
   }, [user]);
+
+  useEffect(() => {
+    const fetchGrades = async () => {
+      try {
+        const gradesData = await getAllGrades();
+        setGrades(gradesData);
+      } catch (err) {
+        console.error("Erreur lors du chargement des grades:", err);
+        setError("Impossible de charger les grades");
+      }
+    };
+
+    fetchGrades();
+  }, []);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -132,7 +146,7 @@ const ModifyUserAdminModal: React.FC<ModifyUserAdminModalProps> = ({
             value={formData.gradeId || ""}
             onChange={handleChange}
           >
-            {mockGrades.map((grade) => (
+            {grades.map((grade) => (
               <option key={grade.idGrade} value={grade.idGrade}>
                 {grade.nomGrade}
               </option>

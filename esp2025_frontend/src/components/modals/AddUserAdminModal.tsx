@@ -1,6 +1,6 @@
-import React, { useState } from "react";
-import { mockGrades } from "../../mocks/mock";
+import React, { useState, useEffect } from "react";
 import { createUser, User, CreateUserDto } from "../../services/adminUsers";
+import { getAllGrades, Grade } from "../../services/referenceData";
 
 interface AddUserAdminModalProps {
   onClose: () => void;
@@ -12,7 +12,7 @@ const AddUserAdminModal: React.FC<AddUserAdminModalProps> = ({
   onSubmit,
 }) => {
   const [formData, setFormData] = useState<CreateUserDto>({
-    gradeId: mockGrades[0].idGrade,
+    gradeId: null,
     email: "",
     ville: "",
     province: "",
@@ -26,7 +26,29 @@ const AddUserAdminModal: React.FC<AddUserAdminModalProps> = ({
     password: "",
   });
 
+  const [grades, setGrades] = useState<Grade[]>([]);
   const [error, setError] = useState<string>("");
+
+  useEffect(() => {
+    const fetchGrades = async () => {
+      try {
+        const gradesData = await getAllGrades();
+        setGrades(gradesData);
+
+        if (gradesData.length > 0) {
+          setFormData((prev) => ({
+            ...prev,
+            gradeId: gradesData[0].idGrade,
+          }));
+        }
+      } catch (err) {
+        console.error("Erreur lors du chargement des grades:", err);
+        setError("Impossible de charger les grades");
+      }
+    };
+
+    fetchGrades();
+  }, []);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -122,7 +144,7 @@ const AddUserAdminModal: React.FC<AddUserAdminModalProps> = ({
             onChange={handleChange}
             required
           >
-            {mockGrades.map((grade) => (
+            {grades.map((grade) => (
               <option key={grade.idGrade} value={grade.idGrade}>
                 {grade.nomGrade}
               </option>

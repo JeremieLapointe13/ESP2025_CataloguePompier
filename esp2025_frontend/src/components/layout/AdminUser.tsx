@@ -1,18 +1,33 @@
-import React, { useState, useEffect } from "react";
-import { mockGrades, type Grade } from "../../mocks/mock";
+import React, { useState, useEffect, use } from "react";
 import AddUserAdminModal from "../modals/AddUserAdminModal";
 import ModifyUserAdminModal from "../modals/ModifyUserAdminModal";
 import { getAllUsers, deleteUser, User } from "../../services/adminUsers";
+import { getAllGrades, Grade } from "../../services/referenceData";
 
 const AdminUser: React.FC = () => {
   const [addUserModalOpen, setAddUserModalOpen] = useState(false);
   const [modifyUserModalOpen, setModifyUserModalOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [users, setUsers] = useState<User[]>([]);
+  const [grades, setGrades] = useState<Grade[]>([]);
   const [error, setError] = useState<string>("");
 
   useEffect(() => {
     fetchUsers();
+  }, []);
+
+  useEffect(() => {
+    const fetchGrades = async () => {
+      try {
+        const gradesData = await getAllGrades();
+        setGrades(gradesData);
+      } catch (err) {
+        console.error("Erreur lors du chargement des grades:", err);
+        setError("Impossible de charger les grades");
+      }
+    };
+
+    fetchGrades();
   }, []);
 
   const fetchUsers = async () => {
@@ -100,7 +115,7 @@ const AdminUser: React.FC = () => {
                 </td>
                 <td className="px-6 py-4">
                   {user.gradeNom ||
-                    mockGrades.find((g: Grade) => g.idGrade === user.gradeId)
+                    grades.find((g: Grade) => g.idGrade === user.gradeId)
                       ?.nomGrade}
                 </td>
                 <td className="px-6 py-4">{user.email}</td>
