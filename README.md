@@ -73,5 +73,5 @@ Veuillez contacter l'administrateur du système pour obtenir vos informations de
 ## Points d'amélioration
 
 - Implémentation de la section "Mes commandes"
-- Amélioration du code coverage
+- Implémentation de tests playwright
 - Optimisation des performances pour les images de produits
