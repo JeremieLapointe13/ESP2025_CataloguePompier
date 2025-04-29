@@ -37,55 +37,55 @@ public class AuthController : ControllerBase
 
     //DÉCOMMENTER LES LIGNES CI-DESSOUS POUR CRÉER LE PREMIER ADMIN
 
-    [HttpPost("create-temp-admin")]
-    [AllowAnonymous]
-    public async Task<IActionResult> CreateTempAdmin()
-    {
-        try
-        {
-            // Créer un nouvel utilisateur admin
-            var password = "Password123!";
-            var hashedPassword = BCrypt.Net.BCrypt.HashPassword(password);
+    //[HttpPost("create-temp-admin")]
+    //[AllowAnonymous]
+    //public async Task<IActionResult> CreateTempAdmin()
+    //{
+    //    try
+    //    {
+    //        // Créer un nouvel utilisateur admin
+    //        var password = "Password123!";
+    //        var hashedPassword = BCrypt.Net.BCrypt.HashPassword(password);
 
-            var user = new User
-            {
-                Email = "admin@example.com",
-                Ville = "Rivière-du-Loup",
-                Province = "Québec",
-                Pays = "Canada",
-                NoMatricule = 12345,
-                Password = hashedPassword,
-                FirstName = "Admin",
-                LastName = "User",
-                Points = 0,
-                IsAdmin = true,
-                IsActive = true,
-                LoginAttempts = 0
-            };
+    //        var user = new User
+    //        {
+    //            Email = "admin@example.com",
+    //            Ville = "Rivière-du-Loup",
+    //            Province = "Québec",
+    //            Pays = "Canada",
+    //            NoMatricule = 12345,
+    //            Password = hashedPassword,
+    //            FirstName = "Admin",
+    //            LastName = "User",
+    //            Points = 0,
+    //            IsAdmin = true,
+    //            IsActive = true,
+    //            LoginAttempts = 0
+    //        };
 
-            // Vérifier si l'utilisateur existe déjà
-            var existingUser = await _userRepository.FindByEmail("admin@example.com");
+    //        // Vérifier si l'utilisateur existe déjà
+    //        var existingUser = await _userRepository.FindByEmail("admin@example.com");
 
-            if (existingUser != null)
-            {
-                return BadRequest(new { message = "Admin user already exists" });
-            }
+    //        if (existingUser != null)
+    //        {
+    //            return BadRequest(new { message = "Admin user already exists" });
+    //        }
 
-            // Créer l'utilisateur
-            var createdUser = await _userRepository.Create(user);
+    //        // Créer l'utilisateur
+    //        var createdUser = await _userRepository.Create(user);
 
-            return Ok(new
-            {
-                message = "Admin user created successfully",
-                userId = createdUser.IdUser,
-                email = createdUser.Email,
-                plainPassword = password,
-                hashedPassword = hashedPassword
-            });
-        }
-        catch (Exception ex)
-        {
-            return StatusCode(500, new { message = ex.Message, stackTrace = ex.StackTrace });
-        }
-    }
+    //        return Ok(new
+    //        {
+    //            message = "Admin user created successfully",
+    //            userId = createdUser.IdUser,
+    //            email = createdUser.Email,
+    //            plainPassword = password,
+    //            hashedPassword = hashedPassword
+    //        });
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        return StatusCode(500, new { message = ex.Message, stackTrace = ex.StackTrace });
+    //    }
+    //}
 }
