@@ -1,69 +1,205 @@
-import React, { useState } from "react";
+// src/components/layout/Panier.tsx
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import {
-  mockProducts,
-  mockSizes,
-  type Product,
-  type Size,
-} from "../../mocks/mock";
+import { FaArrowLeft, FaTrash } from "react-icons/fa";
 // @ts-ignore
 import shrekImage from "../../assets/testshrek.png";
-import { FaArrowLeft, FaTrash } from "react-icons/fa";
+import { getProductById, Product } from "../../services/adminProducts";
+import { getAllSizes, Size } from "../../services/referenceData";
+import {
+  getCart,
+  updateCartItemQuantity,
+  removeFromCart,
+  CartItem,
+} from "../../services/cartService";
+import { createOrder } from "../../services/orderService";
 
-// Dans le futur, utiliser le local storage pour stocker le panier
-interface CartItem {
-  productId: number;
-  quantity: number;
-  sizeId: number;
+// Interface pour les articles du panier avec les détails du produit
+interface CartItemWithDetails {
+  item: CartItem;
+  product: Product | null;
+  size: Size | null;
 }
 
 const Panier: React.FC = () => {
   const navigate = useNavigate();
+  const [cartItems, setCartItems] = useState<CartItem[]>([]);
+  const [cartItemsWithDetails, setCartItemsWithDetails] = useState<
+    CartItemWithDetails[]
+  >([]);
+  const [totalPoints, setTotalPoints] = useState<number>(0);
+  const [sizes, setSizes] = useState<Size[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [processing, setProcessing] = useState<boolean>(false);
+  const [error, setError] = useState<string>("");
 
-  // État initial avec deux produits
-  const [cartItems, setCartItems] = useState<CartItem[]>([
-    { productId: 1, quantity: 1, sizeId: 3 }, // Blouson 3-1 Multi-fonctions Blauer Taille M
-    { productId: 3, quantity: 1, sizeId: 4 }, // Manteau d'entraînement Taille L
-  ]);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setLoading(true);
 
-  // Récupérer les informations des produits depuis mock
-  const cartProductDetails = cartItems.map((item) => {
-    const product = mockProducts.find(
-      (p: Product) => p.idProduct === item.productId
-    );
-    const size = mockSizes.find((s: Size) => s.idSize === item.sizeId);
-    return { ...item, product, size };
-  });
+        // Récupérer le panier du localStorage
+        const cart = getCart();
+        setCartItems(cart);
 
-  // Calculer le total des points
-  const totalPoints = cartProductDetails.reduce(
-    (total, item) =>
-      total + (item.product ? item.product.points * item.quantity : 0),
-    0
-  );
+        // Récupérer toutes les tailles
+        const sizesData = await getAllSizes();
+        setSizes(sizesData);
 
-  // Gérer la quantité
-  const updateQuantity = (productId: number, newQuantity: number) => {
+        // Récupérer les détails des produits pour chaque article du panier
+        const itemsWithDetails: CartItemWithDetails[] = [];
+        let total = 0;
+
+        for (const item of cart) {
+          try {
+            const product = await getProductById(item.productId);
+            const size =
+              sizesData.find((s) => s.idSize === item.sizeId) || null;
+
+            itemsWithDetails.push({
+              item,
+              product,
+              size,
+            });
+
+            if (product) {
+              total += product.points * item.quantity;
+            }
+          } catch (productError) {
+            console.error(
+              `Erreur lors de la récupération du produit ${item.productId}:`,
+              productError
+            );
+            itemsWithDetails.push({
+              item,
+              product: null,
+              size: null,
+            });
+          }
+        }
+
+        setCartItemsWithDetails(itemsWithDetails);
+        setTotalPoints(total);
+
+        setError("");
+      } catch (err) {
+        console.error("Erreur lors du chargement des données:", err);
+        setError("Impossible de charger le panier.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  // Mettre à jour la quantité d'un article
+  const handleUpdateQuantity = async (
+    productId: number,
+    sizeId: number,
+    newQuantity: number
+  ) => {
     if (newQuantity < 1) return;
 
-    setCartItems((items) =>
-      items.map((item) =>
-        item.productId === productId ? { ...item, quantity: newQuantity } : item
-      )
+    updateCartItemQuantity(productId, sizeId, newQuantity);
+
+    // Mettre à jour l'état local
+    const updatedCartItems = cartItems.map((item) =>
+      item.productId === productId && item.sizeId === sizeId
+        ? { ...item, quantity: newQuantity }
+        : item
     );
+    setCartItems(updatedCartItems);
+
+    // Mettre à jour les détails
+    const updatedCartItemsWithDetails = cartItemsWithDetails.map(
+      (itemWithDetails) => {
+        if (
+          itemWithDetails.item.productId === productId &&
+          itemWithDetails.item.sizeId === sizeId
+        ) {
+          const updatedItem = {
+            ...itemWithDetails.item,
+            quantity: newQuantity,
+          };
+          return { ...itemWithDetails, item: updatedItem };
+        }
+        return itemWithDetails;
+      }
+    );
+    setCartItemsWithDetails(updatedCartItemsWithDetails);
+
+    // Recalculer le total
+    let total = 0;
+    for (const itemWithDetails of updatedCartItemsWithDetails) {
+      if (itemWithDetails.product) {
+        total += itemWithDetails.product.points * itemWithDetails.item.quantity;
+      }
+    }
+    setTotalPoints(total);
   };
 
-  // Supprimer un élément du panier
-  const removeItem = (productId: number) => {
-    setCartItems((items) =>
-      items.filter((item) => item.productId !== productId)
+  // Supprimer un article du panier
+  const handleRemoveItem = (productId: number, sizeId: number) => {
+    removeFromCart(productId, sizeId);
+
+    // Mettre à jour l'état local
+    const updatedCartItems = cartItems.filter(
+      (item) => !(item.productId === productId && item.sizeId === sizeId)
     );
+    setCartItems(updatedCartItems);
+
+    // Mettre à jour les détails
+    const updatedCartItemsWithDetails = cartItemsWithDetails.filter(
+      (itemWithDetails) =>
+        !(
+          itemWithDetails.item.productId === productId &&
+          itemWithDetails.item.sizeId === sizeId
+        )
+    );
+    setCartItemsWithDetails(updatedCartItemsWithDetails);
+
+    // Recalculer le total
+    let total = 0;
+    for (const itemWithDetails of updatedCartItemsWithDetails) {
+      if (itemWithDetails.product) {
+        total += itemWithDetails.product.points * itemWithDetails.item.quantity;
+      }
+    }
+    setTotalPoints(total);
   };
 
-  // Retourner au catalogue
-  const handleBack = () => {
-    navigate("/catalogue");
+  // Passer la commande
+  const handlePlaceOrder = async () => {
+    try {
+      if (cartItems.length === 0) {
+        setError("Votre panier est vide.");
+        return;
+      }
+
+      setProcessing(true);
+      setError("");
+
+      const order = await createOrder();
+
+      setProcessing(false);
+
+      // Rediriger vers la page de confirmation de commande
+      navigate(`/commande`);
+    } catch (err: any) {
+      console.error("Erreur lors de la création de la commande:", err);
+      setError(err.message || "Impossible de créer la commande.");
+      setProcessing(false);
+    }
   };
+
+  if (loading) {
+    return (
+      <div className="bg-gray-50 min-h-screen p-6 flex justify-center items-center">
+        <p>Chargement du panier...</p>
+      </div>
+    );
+  }
 
   return (
     <div className="bg-gray-50 min-h-screen p-6">
@@ -71,7 +207,7 @@ const Panier: React.FC = () => {
         {/* En-tête avec bouton retour */}
         <div className="mb-6">
           <button
-            onClick={handleBack}
+            onClick={() => navigate("/catalogue")}
             className="flex items-center text-blue-600 hover:text-blue-800"
           >
             <FaArrowLeft className="mr-2" /> Revenir en arrière
@@ -82,6 +218,12 @@ const Panier: React.FC = () => {
         <div className="bg-white rounded-lg shadow-md p-6">
           <h1 className="text-2xl font-bold mb-6">Votre panier</h1>
 
+          {error && (
+            <div className="p-4 text-red-700 bg-red-100 border border-red-200 mb-4">
+              {error}
+            </div>
+          )}
+
           {cartItems.length === 0 ? (
             <div className="text-center py-12 border rounded">
               <p className="text-xl font-semibold">Votre panier est vide !</p>
@@ -90,28 +232,49 @@ const Panier: React.FC = () => {
             <>
               {/* Liste des articles */}
               <div className="divide-y">
-                {cartProductDetails.map((item) => {
-                  if (!item.product) return null;
+                {cartItemsWithDetails.map((itemWithDetails) => {
+                  const { item, product, size } = itemWithDetails;
+
+                  if (!product) {
+                    return (
+                      <div
+                        key={`${item.productId}-${item.sizeId}`}
+                        className="py-4"
+                      >
+                        <p className="text-red-500">
+                          Produit non disponible (ID: {item.productId})
+                        </p>
+                        <button
+                          className="text-red-500 hover:text-red-700"
+                          onClick={() =>
+                            handleRemoveItem(item.productId, item.sizeId)
+                          }
+                        >
+                          <FaTrash /> Supprimer
+                        </button>
+                      </div>
+                    );
+                  }
 
                   return (
                     <div
-                      key={item.productId}
+                      key={`${item.productId}-${item.sizeId}`}
                       className="py-4 flex items-center"
                     >
                       {/* Image du produit */}
                       <div className="w-24 h-24 flex-shrink-0 bg-gray-200 rounded overflow-hidden mr-4">
                         <img
-                          src={item.product.imageURL || shrekImage}
-                          alt={item.product.name}
+                          src={product.imageURL || shrekImage}
+                          alt={product.name}
                           className="w-full h-full object-cover"
                         />
                       </div>
 
                       {/* Informations du produit */}
                       <div className="flex-grow">
-                        <h3 className="font-semibold">{item.product.name}</h3>
+                        <h3 className="font-semibold">{product.name}</h3>
                         <p className="text-sm text-gray-500">
-                          Taille: {item.size?.status}
+                          Taille: {size?.status || "N/A"}
                         </p>
                       </div>
 
@@ -120,7 +283,11 @@ const Panier: React.FC = () => {
                         <button
                           className="px-3 py-1 border-r"
                           onClick={() =>
-                            updateQuantity(item.productId, item.quantity - 1)
+                            handleUpdateQuantity(
+                              item.productId,
+                              item.sizeId,
+                              item.quantity - 1
+                            )
                           }
                         >
                           -
@@ -129,7 +296,11 @@ const Panier: React.FC = () => {
                         <button
                           className="px-3 py-1 border-l"
                           onClick={() =>
-                            updateQuantity(item.productId, item.quantity + 1)
+                            handleUpdateQuantity(
+                              item.productId,
+                              item.sizeId,
+                              item.quantity + 1
+                            )
                           }
                         >
                           +
@@ -138,13 +309,15 @@ const Panier: React.FC = () => {
 
                       {/* Points */}
                       <div className="text-right w-24 font-semibold">
-                        {item.product.points * item.quantity} points
+                        {product.points * item.quantity} points
                       </div>
 
                       {/* Supprimer */}
                       <button
                         className="ml-4 text-red-500 hover:text-red-700"
-                        onClick={() => removeItem(item.productId)}
+                        onClick={() =>
+                          handleRemoveItem(item.productId, item.sizeId)
+                        }
                       >
                         <FaTrash />
                       </button>
@@ -161,8 +334,16 @@ const Panier: React.FC = () => {
                     {totalPoints} points
                   </span>
                 </div>
-                <button className="w-full bg-gray-800 hover:bg-red-800 text-white py-3 rounded-lg">
-                  Passer la commande
+                <button
+                  className={`w-full py-3 rounded-lg ${
+                    processing || cartItems.length === 0
+                      ? "bg-gray-400 cursor-not-allowed"
+                      : "bg-gray-800 hover:bg-red-800"
+                  } text-white`}
+                  onClick={handlePlaceOrder}
+                  disabled={processing || cartItems.length === 0}
+                >
+                  {processing ? "Traitement en cours..." : "Passer la commande"}
                 </button>
               </div>
             </>

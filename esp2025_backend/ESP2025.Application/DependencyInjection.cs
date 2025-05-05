@@ -9,6 +9,8 @@ using ESP2025.Application.Service.Product;
 using ESP2025.Application.UseCases.Product.Interfaces;
 using ESP2025.Application.UseCases;
 using ESP2025.Application.UseCases.Reference;
+using ESP2025.Application.UseCases.Order.Interfaces;
+using ESP2025.Application.UseCases.Order;
 
 namespace ESP2025.Application;
 public static class DependencyInjection
@@ -38,6 +40,10 @@ public static class DependencyInjection
         services.AddScoped<IGetAllFabricTypesUseCase, GetAllFabricTypesUseCase>();
         services.AddScoped<IGetAllCategoriesUseCase, GetAllCategoriesUseCase>();
         services.AddScoped<IGetAllGradesUseCase, GetAllGradesUseCase>();
+
+        services.AddScoped<ICreateOrderUseCase, CreateOrderUseCase>();
+        services.AddScoped<IGetOrdersByUserUseCase, GetOrdersByUserUseCase>();
+        services.AddScoped<IGetOrderByIdUseCase, GetOrderByIdUseCase>();
 
         return services;
     }

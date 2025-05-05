@@ -6,7 +6,7 @@ using ESP2025.Application.UseCase;
 using ESP2025.Domain.Interfaces.Repositories;
 using Moq;
 
-namespace TodoApplicationTests;
+namespace ESP2025.ApplicationTests;
 
 public class ProductsTests
 {

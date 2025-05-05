@@ -198,7 +198,7 @@ const Catalogue: React.FC = () => {
                 <button
                   className="w-full bg-gray-800 hover:bg-red-800 text-white py-2 rounded mt-auto"
                   onClick={(e) => {
-                    e.stopPropagation();
+                    navigate(`/product/${product.idProduct}`);
                   }}
                 >
                   Ajouter au panier

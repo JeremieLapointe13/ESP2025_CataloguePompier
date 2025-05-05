@@ -27,6 +27,9 @@ public static class DependencyInjection
         services.AddScoped<IFabricTypeRepository, FabricTypeRepository>();
         services.AddScoped<ICategoryRepository, CategoryRepository>();
         services.AddScoped<IGradeRepository, GradeRepository>();
+        services.AddScoped<IOrderRepository, OrderRepository>();
+        services.AddScoped<IOrderStatusRepository, OrderStatusRepository>();
+        services.AddScoped<IOrderItemRepository, OrderItemRepository>();
 
         return services;
     }

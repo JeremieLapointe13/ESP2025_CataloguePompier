@@ -16,6 +16,9 @@ public class AppDbContext : DbContext
     public DbSet<Supplier> Supplier { get; set; }
     public DbSet<Size> Size { get; set; }
     public DbSet<FabricType> FabricType { get; set; }
+    public DbSet<Order> Order { get; set; }
+    public DbSet<OrderItem> OrderItem { get; set; }
+    public DbSet<OrderStatus> OrderStatus { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
