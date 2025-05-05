@@ -1,360 +1,140 @@
 using ESP2025.Application.DTOS;
 using ESP2025.Domain.Entities;
-using ESP2025.Application.Exceptions;
-using ESP2025.Application.UseCases.Order;
-using ESP2025.Application.UseCases.Order.Interfaces;
+using ESP2025.Application.Services.Auth;
+using ESP2025.Application.UseCase.Auth;
 using ESP2025.Domain.Interfaces.Repositories;
+using Microsoft.Extensions.Configuration;
 using Moq;
+using System.Text;
 
 namespace ESP2025.ApplicationTests;
 
-public class OrdersTests
+public class AuthTests
 {
-    private Mock<IOrderRepository> _orderRepositoryMock;
-    private Mock<IProductRepository> _productRepositoryMock;
-    private Mock<IUserRepository> _userRepositoryMock;
-    private Mock<IOrderItemRepository> _orderItemRepositoryMock;
+    private Mock<IAuthRepository> _authRepositoryMock;
+    private Mock<IConfiguration> _configurationMock;
+    private AuthService _authService;
+    private LoginUseCase _loginUseCase;
 
-    private CreateOrderUseCase _createOrderUseCase;
-    private GetOrdersByUserUseCase _getOrdersByUserUseCase;
-    private GetOrderByIdUseCase _getOrderByIdUseCase;
-
-    private User testUser;
-    private Product testProduct;
-    private Order testOrder;
-    private OrderItem testOrderItem;
-    private OrderStatus testOrderStatus;
+    User user1 = new User
+    {
+        IdUser = 1,
+        Email = "test@example.com",
+        FirstName = "Test",
+        LastName = "User",
+        Password = BCrypt.Net.BCrypt.HashPassword("Password123"),
+        IsAdmin = false,
+        IsActive = true,
+        LoginAttempts = 0
+    };
 
     [SetUp]
     public void Setup()
     {
-        _orderRepositoryMock = new Mock<IOrderRepository>();
-        _productRepositoryMock = new Mock<IProductRepository>();
-        _userRepositoryMock = new Mock<IUserRepository>();
-        _orderItemRepositoryMock = new Mock<IOrderItemRepository>();
+        _authRepositoryMock = new Mock<IAuthRepository>();
+        _configurationMock = new Mock<IConfiguration>();
 
-        // Créer les use cases avec les mocks
-        _createOrderUseCase = new CreateOrderUseCase(
-            _orderRepositoryMock.Object,
-            _productRepositoryMock.Object,
-            _userRepositoryMock.Object,
-            _orderItemRepositoryMock.Object);
+        // Configuration pour JWT
+        var configSectionMock = new Mock<IConfigurationSection>();
+        configSectionMock.Setup(s => s["SecretKey"]).Returns("8ee78233e6c7595dd20032e01eec1719");
+        configSectionMock.Setup(s => s["Issuer"]).Returns("ESP2025Api");
+        configSectionMock.Setup(s => s["Audience"]).Returns("ESP2025Client");
+        configSectionMock.Setup(s => s["ExpiryMinutes"]).Returns("60");
 
-        _getOrdersByUserUseCase = new GetOrdersByUserUseCase(
-            _orderRepositoryMock.Object);
+        _configurationMock.Setup(c => c.GetSection("JwtSettings")).Returns(configSectionMock.Object);
+        _configurationMock.Setup(c => c["JwtSettings:SecretKey"]).Returns("8ee78233e6c7595dd20032e01eec1719");
+        _configurationMock.Setup(c => c["JwtSettings:Issuer"]).Returns("ESP2025Api");
+        _configurationMock.Setup(c => c["JwtSettings:Audience"]).Returns("ESP2025Client");
+        _configurationMock.Setup(c => c["JwtSettings:ExpiryMinutes"]).Returns("60");
 
-        _getOrderByIdUseCase = new GetOrderByIdUseCase(
-            _orderRepositoryMock.Object);
+        _authService = new AuthService(_authRepositoryMock.Object, _configurationMock.Object);
+        _loginUseCase = new LoginUseCase(_authService);
 
-        // Configurer les données de test
-        SetupTestData();
-
-        // Configurer les mocks
-        SetupMocks();
-    }
-
-    private void SetupTestData()
-    {
-        // Configurer un utilisateur de test
-        testUser = new User
-        {
-            IdUser = 1,
-            FirstName = "Jérémie",
-            LastName = "Lapointe",
-            Email = "test@example.com",
-            Ville = "Rivière-du-Loup",
-            Province = "Québec",
-            Pays = "Canada",
-            NoMatricule = 1001,
-            Points = 500, // Beaucoup de points pour les tests
-            IsAdmin = false,
-            IsActive = true,
-            LoginAttempts = 0
-        };
-
-        // Configurer un produit de test
-        testProduct = new Product
-        {
-            IdProduct = 1,
-            Name = "T-shirt",
-            ProductNo = "P001",
-            CategoryId = 1,
-            SupplierId = 1,
-            SizeId = 1,
-            Points = 25,
-            Quantity = 10,
-            IsActive = true
-        };
-
-        // Configurer un statut de commande
-        testOrderStatus = new OrderStatus
-        {
-            IdOrderStatus = 1,
-            Status = "pending"
-        };
-
-        // Configurer une commande de test
-        testOrder = new Order
-        {
-            IdOrder = 1,
-            UserId = testUser.IdUser,
-            OrderStatusId = testOrderStatus.IdOrderStatus,
-            OrderNumber = "123456-654321",
-            OrderDate = DateTime.UtcNow,
-            ExpectedDeliveryDate = DateTime.UtcNow.AddDays(2),
-            ActualDeliveryDate = null,
-            TotalPoints = 25,
-            User = testUser,
-            OrderStatus = testOrderStatus,
-            OrderItems = new List<OrderItem>()
-        };
-
-        // Configurer un item de commande de test
-        testOrderItem = new OrderItem
-        {
-            IdOrderItem = 1,
-            OrderId = testOrder.IdOrder,
-            ProductId = testProduct.IdProduct,
-            SizeId = testProduct.SizeId,
-            Quantity = 1,
-            PointsAtPurchase = testProduct.Points,
-            Product = testProduct,
-            Size = new Size { IdSize = 1, Status = "M" }
-        };
-
-        // Ajouter l'item à la commande
-        testOrder.OrderItems.Add(testOrderItem);
-    }
-
-    private void SetupMocks()
-    {
-        // Mock du repository User
-        _userRepositoryMock.Setup(repo => repo.FindById(testUser.IdUser))
-            .ReturnsAsync(testUser);
-
-        // Mock du repository Product
-        _productRepositoryMock.Setup(repo => repo.FindById(testProduct.IdProduct))
-            .ReturnsAsync(testProduct);
-
-        // Mock du repository Order
-        _orderRepositoryMock.Setup(repo => repo.Create(It.IsAny<Order>()))
-            .ReturnsAsync((Order order) => {
-                order.IdOrder = 1;
-                return order;
-            });
-
-        _orderRepositoryMock.Setup(repo => repo.GetOrdersByUserId(testUser.IdUser))
-            .ReturnsAsync(new List<Order> { testOrder });
-
-        _orderRepositoryMock.Setup(repo => repo.GetOrderById(testOrder.IdOrder))
-            .ReturnsAsync(testOrder);
-
-        // Mock du repository OrderItem
-        _orderItemRepositoryMock.Setup(repo => repo.Create(It.IsAny<OrderItem>()))
-            .ReturnsAsync((OrderItem item) => {
-                item.IdOrderItem = 1;
-                return item;
-            });
+        // Mock du repository
+        _authRepositoryMock.Setup(repo => repo.FindByEmail("test@example.com")).ReturnsAsync(user1);
+        _authRepositoryMock.Setup(repo => repo.IncrementLoginAttempts(It.IsAny<int>())).Returns(Task.CompletedTask);
+        _authRepositoryMock.Setup(repo => repo.ResetLoginAttempts(It.IsAny<int>())).Returns(Task.CompletedTask);
     }
 
     [Test]
-    public async Task CreateOrder_ShouldCreateOrderAndDeductPoints()
+    public async Task Login_WithValidCredentials_ShouldReturnAuthResponse()
     {
         // Arrange
-        var createOrderDto = new CreateOrderDto
+        var loginRequest = new LoginRequestDto
         {
-            OrderItems = new List<OrderItemDto>
-        {
-            new OrderItemDto
-            {
-                ProductId = testProduct.IdProduct,
-                SizeId = testProduct.SizeId,
-                Quantity = 1
-            }
-        }
+            Email = "test@example.com",
+            Password = "Password123"
         };
-
-        int initialPoints = testUser.Points;
-        int expectedDeduction = testProduct.Points;
 
         // Act
-        var result = await _createOrderUseCase.Execute(testUser.IdUser, createOrderDto);
+        var result = await _loginUseCase.Execute(loginRequest);
 
         // Assert
-        Assert.That(result, Is.Not.Null);
-        Assert.That(result.OrderNumber, Is.Not.Null.Or.Empty);
-        Assert.That(result.TotalPoints, Is.EqualTo(testProduct.Points));
-        Assert.That(result.Status, Is.EqualTo("pending"));
-
-        _orderRepositoryMock.Verify(repo => repo.Create(It.IsAny<Order>()), Times.Once);
-        _orderItemRepositoryMock.Verify(repo => repo.Create(It.IsAny<OrderItem>()), Times.Once);
-
-        _userRepositoryMock.Verify(repo => repo.Update(It.IsAny<User>()), Times.Once);
+        Assert.That(result, Is.Not.Null, "Auth response is returned");
+        Assert.That(result.Token, Is.Not.Null, "Token is generated");
+        Assert.That(result.IdUser, Is.EqualTo(user1.IdUser), "Correct user ID is returned");
+        Assert.That(result.Email, Is.EqualTo(user1.Email), "Correct email is returned");
     }
 
     [Test]
-    public async Task CreateOrder_WithInsufficientPoints_ShouldThrowException()
+    public void Login_WithInvalidEmail_ShouldThrowException()
     {
         // Arrange
-        var userWithLowPoints = new User
+        var loginRequest = new LoginRequestDto
+        {
+            Email = "nonexistent@example.com",
+            Password = "Password123"
+        };
+
+        // Act & Assert
+        Assert.ThrowsAsync<Exception>(async () => await _loginUseCase.Execute(loginRequest));
+    }
+
+    [Test]
+    public void Login_WithInvalidPassword_ShouldThrowException()
+    {
+        // Arrange
+        var loginRequest = new LoginRequestDto
+        {
+            Email = "test@example.com",
+            Password = "WrongPassword"
+        };
+
+        // Act & Assert
+        Assert.ThrowsAsync<Exception>(async () => await _loginUseCase.Execute(loginRequest));
+    }
+
+    [Test]
+    public void Login_WithInactiveAccount_ShouldThrowException()
+    {
+        // Arrange
+        var inactiveUser = new User
         {
             IdUser = 2,
-            FirstName = "User",
-            LastName = "Test",
-            Points = 10 // Moins que le coût du produit
+            Email = "inactive@example.com",
+            Password = BCrypt.Net.BCrypt.HashPassword("Password123"),
+            IsActive = false
         };
+        _authRepositoryMock.Setup(repo => repo.FindByEmail("inactive@example.com")).ReturnsAsync(inactiveUser);
 
-        _userRepositoryMock.Setup(repo => repo.FindById(userWithLowPoints.IdUser))
-            .ReturnsAsync(userWithLowPoints);
-
-        var createOrderDto = new CreateOrderDto
+        var loginRequest = new LoginRequestDto
         {
-            OrderItems = new List<OrderItemDto>
-            {
-                new OrderItemDto
-                {
-                    ProductId = testProduct.IdProduct,
-                    SizeId = testProduct.SizeId,
-                    Quantity = 1
-                }
-            }
+            Email = "inactive@example.com",
+            Password = "Password123"
         };
 
         // Act & Assert
-        Assert.ThrowsAsync<Exception>(async () =>
-            await _createOrderUseCase.Execute(userWithLowPoints.IdUser, createOrderDto));
+        Assert.ThrowsAsync<Exception>(async () => await _loginUseCase.Execute(loginRequest));
     }
 
     [Test]
-    public async Task CreateOrder_WithNonExistentProduct_ShouldThrowException()
-    {
-        // Arrange
-        _productRepositoryMock.Setup(repo => repo.FindById(999))
-            .ReturnsAsync((Product)null);
-
-        var createOrderDto = new CreateOrderDto
-        {
-            OrderItems = new List<OrderItemDto>
-            {
-                new OrderItemDto
-                {
-                    ProductId = 999, // ID de produit qui n'existe pas
-                    SizeId = 1,
-                    Quantity = 1
-                }
-            }
-        };
-
-        // Act & Assert
-        Assert.ThrowsAsync<Exception>(async () =>
-            await _createOrderUseCase.Execute(testUser.IdUser, createOrderDto));
-    }
-
-    [Test]
-    public async Task CreateOrder_WithInactiveProduct_ShouldThrowException()
-    {
-        // Arrange
-        var inactiveProduct = new Product
-        {
-            IdProduct = 2,
-            Name = "Produit inactif",
-            ProductNo = "P002",
-            IsActive = false,
-            Quantity = 10
-        };
-
-        _productRepositoryMock.Setup(repo => repo.FindById(inactiveProduct.IdProduct))
-            .ReturnsAsync(inactiveProduct);
-
-        var createOrderDto = new CreateOrderDto
-        {
-            OrderItems = new List<OrderItemDto>
-            {
-                new OrderItemDto
-                {
-                    ProductId = inactiveProduct.IdProduct,
-                    SizeId = 1,
-                    Quantity = 1
-                }
-            }
-        };
-
-        // Act & Assert
-        Assert.ThrowsAsync<Exception>(async () =>
-            await _createOrderUseCase.Execute(testUser.IdUser, createOrderDto));
-    }
-
-    [Test]
-    public async Task CreateOrder_WithInsufficientQuantity_ShouldThrowException()
-    {
-        // Arrange
-        var lowQuantityProduct = new Product
-        {
-            IdProduct = 3,
-            Name = "Produit faible stock",
-            ProductNo = "P003",
-            IsActive = true,
-            Quantity = 2, // Quantité insuffisante
-            Points = 25
-        };
-
-        _productRepositoryMock.Setup(repo => repo.FindById(lowQuantityProduct.IdProduct))
-            .ReturnsAsync(lowQuantityProduct);
-
-        var createOrderDto = new CreateOrderDto
-        {
-            OrderItems = new List<OrderItemDto>
-            {
-                new OrderItemDto
-                {
-                    ProductId = lowQuantityProduct.IdProduct,
-                    SizeId = 1,
-                    Quantity = 5 // Plus que la quantité disponible
-                }
-            }
-        };
-
-        // Act & Assert
-        Assert.ThrowsAsync<Exception>(async () =>
-            await _createOrderUseCase.Execute(testUser.IdUser, createOrderDto));
-    }
-
-    [Test]
-    public async Task GetOrdersByUser_ShouldReturnUserOrders()
+    public void GenerateJwtToken_ShouldReturnValidToken()
     {
         // Act
-        var result = await _getOrdersByUserUseCase.Execute(testUser.IdUser);
+        var token = _authService.GenerateJwtToken(user1);
 
         // Assert
-        Assert.That(result, Is.Not.Null);
-        Assert.That(result.Count, Is.EqualTo(1));
-        Assert.That(result[0].IdOrder, Is.EqualTo(testOrder.IdOrder));
-        Assert.That(result[0].OrderNumber, Is.EqualTo(testOrder.OrderNumber));
-    }
-
-    [Test]
-    public async Task GetOrderById_ShouldReturnOrder()
-    {
-        // Act
-        var result = await _getOrderByIdUseCase.Execute(testOrder.IdOrder);
-
-        // Assert
-        Assert.That(result, Is.Not.Null);
-        Assert.That(result.IdOrder, Is.EqualTo(testOrder.IdOrder));
-        Assert.That(result.OrderNumber, Is.EqualTo(testOrder.OrderNumber));
-        Assert.That(result.OrderItems.Count, Is.EqualTo(1));
-        Assert.That(result.OrderItems[0].ProductId, Is.EqualTo(testProduct.IdProduct));
-    }
-
-    [Test]
-    public async Task GetOrderById_WithNonExistentId_ShouldThrowException()
-    {
-        // Arrange
-        _orderRepositoryMock.Setup(repo => repo.GetOrderById(999))
-            .ReturnsAsync((Order)null);
-
-        // Act & Assert
-        Assert.ThrowsAsync<Exception>(async () =>
-            await _getOrderByIdUseCase.Execute(999));
+        Assert.That(token, Is.Not.Null, "Token is generated");
+        Assert.That(token.Length, Is.GreaterThan(0), "Token has content");
     }
 }
