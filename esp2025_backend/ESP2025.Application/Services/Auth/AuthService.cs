@@ -67,6 +67,7 @@ public class AuthService : IAuthService
             FirstName = user.FirstName,
             LastName = user.LastName,
             IsAdmin = user.IsAdmin,
+            Points = user.Points,
             Expiration = expiration
         };
     }

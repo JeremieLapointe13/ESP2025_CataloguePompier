@@ -10,6 +10,7 @@ import AdminUserPage from "./page/AdminUserPage";
 import AdminProductPage from "./page/AdminProductPage";
 import AdminPointPage from "./page/AdminPointPage";
 import CommandePage from "./page/CommandePage";
+import ProfilePage from "./page/ProfilePage";
 function App() {
   return (
     <BrowserRouter>
@@ -24,6 +25,7 @@ function App() {
         <Route path="/admin/products" element={<AdminProductPage />} />
         <Route path="/admin/points" element={<AdminPointPage />} />
         <Route path="/commande" element={<CommandePage />} />
+        <Route path="/profile" element={<ProfilePage />} />
       </Routes>
     </BrowserRouter>
   );

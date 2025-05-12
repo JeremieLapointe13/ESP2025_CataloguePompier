@@ -13,6 +13,7 @@ interface LoginResponse {
   lastName: string;
   isAdmin: boolean;
   expiration: string;
+  points: number;
 }
 
 export const login = async (
@@ -36,6 +37,17 @@ export const login = async (
 
     // Stocker le token dans le localStorage
     localStorage.setItem("token", data.token);
+    localStorage.setItem(
+      "user",
+      JSON.stringify({
+        idUser: data.idUser,
+        email: data.email,
+        firstName: data.firstName,
+        lastName: data.lastName,
+        points: data.points,
+        isAdmin: data.isAdmin,
+      })
+    );
 
     return data;
   } catch (error) {
@@ -46,6 +58,7 @@ export const login = async (
 
 export const logout = () => {
   localStorage.removeItem("token");
+  localStorage.removeItem("user");
 };
 
 export const isLoggedIn = () => {
@@ -54,4 +67,25 @@ export const isLoggedIn = () => {
 
 export const getToken = () => {
   return localStorage.getItem("token");
+};
+
+export const isAdmin = () => {
+  const userJson = localStorage.getItem("user");
+  if (!userJson) return false;
+
+  const user = JSON.parse(userJson);
+  return user.isAdmin === true;
+};
+
+export const getUser = () => {
+  const userJson = localStorage.getItem("user");
+  return userJson ? JSON.parse(userJson) : null;
+};
+
+export const getPoints = () => {
+  const userJson = localStorage.getItem("user");
+  if (!userJson) return 0;
+
+  const user = JSON.parse(userJson);
+  return user.points;
 };
