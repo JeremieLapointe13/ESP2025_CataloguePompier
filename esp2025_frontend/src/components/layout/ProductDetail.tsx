@@ -14,7 +14,7 @@ const ProductDetail: React.FC = () => {
   const navigate = useNavigate();
   const [product, setProduct] = useState<Product | null>(null);
   const [sizes, setSizes] = useState<Size[]>([]);
-  const [selectedSizeId, setSelectedSizeId] = useState<number>(0); // Changement ici: on stocke l'ID
+  const [selectedSizeId, setSelectedSizeId] = useState<number>(0);
   const [addToCartModalOpen, setAddToCartModalOpen] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string>("");
