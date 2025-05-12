@@ -46,6 +46,7 @@ const Profile: React.FC = () => {
             </div>
           </div>
         ) : (
+          // Pour protéger la route
           <div className="bg-white shadow overflow-hidden rounded-lg p-6 text-center">
             <p className="text-gray-500">
               Connectez-vous pour voir votre profil
