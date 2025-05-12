@@ -6,7 +6,9 @@ const ProfilePage: React.FC = () => {
   return (
     <div className="flex flex-col min-h-screen">
       <Header />
-      <Profile />
+      <div className="flex-grow">
+        <Profile />
+      </div>
       <Footer />
     </div>
   );
