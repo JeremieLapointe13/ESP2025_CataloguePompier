@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { getAllCategories, Category } from "../../services/referenceData";
 import { getAllProducts, Product } from "../../services/adminProducts";
 // @ts-ignore
-import shrekImage from "../../assets/testshrek.png";
+import notFoundImageImage from "../../assets/notFound.png";
 
 const Catalogue: React.FC = () => {
   const [categories, setCategories] = useState<Category[]>([]);
@@ -181,7 +181,7 @@ const Catalogue: React.FC = () => {
               >
                 <div className="relative h-48 flex justify-center items-center mb-3">
                   <img
-                    src={product.imageURL || shrekImage}
+                    src={product.imageURL || notFoundImageImage}
                     alt={product.name}
                     className="max-h-full max-w-full object-contain"
                   />

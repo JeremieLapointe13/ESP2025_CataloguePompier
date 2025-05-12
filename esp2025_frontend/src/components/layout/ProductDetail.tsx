@@ -4,7 +4,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { getProductById, Product } from "../../services/adminProducts";
 import { getAllSizes, Size } from "../../services/referenceData";
 // @ts-ignore
-import shrekImage from "../../assets/testshrek.png";
+import notFoundImageImage from "../../assets/notFound.png";
 import { FaArrowLeft } from "react-icons/fa";
 import AddToCartModal from "../modals/AddToCartModal";
 import { addToCart } from "../../services/cartService";
@@ -100,7 +100,7 @@ const ProductDetail: React.FC = () => {
           {/* Image du produit */}
           <div className="md:w-1/2 relative">
             <img
-              src={product.imageURL || shrekImage}
+              src={product.imageURL || notFoundImageImage}
               alt={product.name}
               className="w-full h-auto object-cover rounded-lg"
             />

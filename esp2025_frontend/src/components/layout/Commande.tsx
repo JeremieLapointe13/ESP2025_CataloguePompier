@@ -5,7 +5,7 @@ import { FaArrowLeft } from "react-icons/fa";
 import { getUserOrders, OrderDto } from "../../services/orderService";
 import { getProductById } from "../../services/adminProducts";
 // @ts-ignore
-import shrekImage from "../../assets/testshrek.png";
+import notFoundImageImage from "../../assets/notFound.png";
 
 const formatDate = (dateString: string): string => {
   if (!dateString) return "";
@@ -48,9 +48,9 @@ const CommandeDetails: React.FC<{ order: OrderDto }> = ({ order }) => {
       for (const item of order.orderItems.slice(0, 5)) {
         try {
           const product = await getProductById(item.productId);
-          images[item.productId] = product.imageURL || shrekImage;
+          images[item.productId] = product.imageURL || notFoundImageImage;
         } catch (error) {
-          images[item.productId] = shrekImage;
+          images[item.productId] = notFoundImageImage;
         }
       }
 
@@ -101,7 +101,7 @@ const CommandeDetails: React.FC<{ order: OrderDto }> = ({ order }) => {
                     alt={item.productName}
                     className="w-full h-full object-contain"
                     onError={(e) => {
-                      (e.target as HTMLImageElement).src = shrekImage;
+                      (e.target as HTMLImageElement).src = notFoundImageImage;
                     }}
                   />
                 ) : (

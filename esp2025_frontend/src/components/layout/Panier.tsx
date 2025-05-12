@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaArrowLeft, FaTrash } from "react-icons/fa";
 // @ts-ignore
-import shrekImage from "../../assets/testshrek.png";
+import notFoundImageImage from "../../assets/notFound.png";
 import { getProductById, Product } from "../../services/adminProducts";
 import { getAllSizes, Size } from "../../services/referenceData";
 import {
@@ -264,7 +264,7 @@ const Panier: React.FC = () => {
                       {/* Image du produit */}
                       <div className="w-24 h-24 flex-shrink-0 bg-gray-200 rounded overflow-hidden mr-4">
                         <img
-                          src={product.imageURL || shrekImage}
+                          src={product.imageURL || notFoundImageImage}
                           alt={product.name}
                           className="w-full h-full object-cover"
                         />
